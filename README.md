@@ -8,56 +8,58 @@ A modern, mobile-responsive personal finance dashboard that transforms your bank
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss)
 ![Supabase](https://img.shields.io/badge/Supabase-Auth_&_DB-3ECF8E?logo=supabase)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/deploy-status/deploy-status.svg)](https://expenseeiq.netlify.app)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/79fca86d-e754-4a6c-a17d-75341712cd71/deploy-status)](https://app.netlify.com/projects/expenseeiq/deploys)
 
 ## Features
 
 ### Core
-- **Excel Upload** — Drag & drop your `.xlsx` bank statement and get instant analysis
-- **Needs / Wants / Investments** — Every transaction auto-classified using the 50/30/20 rule
-- **Multi-Account Support** — Track spending across bank accounts and credit cards
-- **Data Persistence** — Your data is saved to Supabase and restored on every visit
-- **User Authentication** — Email + password auth with Row Level Security (each user sees only their data)
+
+-   **Excel Upload** — Drag & drop your `.xlsx` bank statement and get instant analysis
+-   **Needs / Wants / Investments** — Every transaction auto-classified using the 50/30/20 rule
+-   **Multi-Account Support** — Track spending across bank accounts and credit cards
+-   **Data Persistence** — Your data is saved to Supabase and restored on every visit
+-   **User Authentication** — Email + password auth with Row Level Security (each user sees only their data)
 
 ### Dashboard Pages
 
-| Page | What it shows |
-|------|---------------|
-| **Overview** | Summary cards, allocation bar, spending chart, recent transactions, recurring expenses, SIP tracker |
-| **Transactions** | Searchable, filterable table of all income & expenses with card layout on mobile |
-| **Categories** | Donut chart, expandable category/subcategory list, monthly category trend (top 5) |
-| **Accounts** | Per-account spending cards, usage bar chart, credit card monthly analysis, monthly trend |
-| **Trends** | Income vs expense bars, savings rate per month, needs/wants/investments stacked chart |
-| **Budget** | 50/30/20 actual vs target comparison with gap analysis cards |
-| **Insights** | Top categories, largest transactions, food breakdown, transport analysis, quick commerce, split tracking, investment consistency, spending extremes, savings rate trend |
+| Page             | What it shows                                                                                                                                                           |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Overview**     | Summary cards, allocation bar, spending chart, recent transactions, recurring expenses, SIP tracker                                                                     |
+| **Transactions** | Searchable, filterable table of all income & expenses with card layout on mobile                                                                                        |
+| **Categories**   | Donut chart, expandable category/subcategory list, monthly category trend (top 5)                                                                                       |
+| **Accounts**     | Per-account spending cards, usage bar chart, credit card monthly analysis, monthly trend                                                                                |
+| **Trends**       | Income vs expense bars, savings rate per month, needs/wants/investments stacked chart                                                                                   |
+| **Budget**       | 50/30/20 actual vs target comparison with gap analysis cards                                                                                                            |
+| **Insights**     | Top categories, largest transactions, food breakdown, transport analysis, quick commerce, split tracking, investment consistency, spending extremes, savings rate trend |
 
 ### Mobile
-- Bottom tab navigation (replaces sidebar on mobile)
-- "More" slide-up menu for additional pages
-- Card-based transaction list (replaces table on small screens)
-- All grids collapse to single column
-- Safe area support for iPhone notch/home indicator
+
+-   Bottom tab navigation (replaces sidebar on mobile)
+-   "More" slide-up menu for additional pages
+-   Card-based transaction list (replaces table on small screens)
+-   All grids collapse to single column
+-   Safe area support for iPhone notch/home indicator
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | [Next.js 16](https://nextjs.org/) (App Router) |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS 4 |
-| State | [Zustand](https://zustand-demo.pmnd.rs/) |
-| Charts | [Recharts](https://recharts.org/) |
-| Excel Parsing | [SheetJS (xlsx)](https://sheetjs.com/) |
+| Layer           | Technology                                                      |
+| --------------- | --------------------------------------------------------------- |
+| Framework       | [Next.js 16](https://nextjs.org/) (App Router)                  |
+| Language        | TypeScript 5                                                    |
+| Styling         | Tailwind CSS 4                                                  |
+| State           | [Zustand](https://zustand-demo.pmnd.rs/)                        |
+| Charts          | [Recharts](https://recharts.org/)                               |
+| Excel Parsing   | [SheetJS (xlsx)](https://sheetjs.com/)                          |
 | Auth & Database | [Supabase](https://supabase.com/) (Auth + PostgreSQL + Storage) |
-| Icons | [Lucide React](https://lucide.dev/) |
+| Icons           | [Lucide React](https://lucide.dev/)                             |
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- npm or pnpm
-- A [Supabase](https://supabase.com/) project (free tier works)
+-   Node.js 18+
+-   npm or pnpm
+-   A [Supabase](https://supabase.com/) project (free tier works)
 
 ### 1. Clone & Install
 
@@ -101,9 +103,11 @@ CREATE POLICY "Users delete own files" ON storage.objects FOR DELETE
 ```
 
 In Supabase Dashboard → **Authentication → URL Configuration**, set the redirect URL to:
+
 ```
 http://localhost:3000/auth/callback
 ```
+
 (Update this to your production URL after deploying.)
 
 ### 3. Environment Variables
@@ -129,15 +133,15 @@ Open [http://localhost:3000](http://localhost:3000), sign up, upload your Excel 
 
 The app expects an `.xlsx` file with these columns (case-insensitive):
 
-| Column | Description | Example |
-|--------|------------|---------|
-| Date | Transaction date | 2026-04-05 |
-| Account | Bank/card name | HDFC Savings |
-| Category | Spending category | Food |
-| Sub Category | Specific type | Groceries |
-| Type | Transaction type | Expense / Income |
-| Amount | Transaction amount | 5000 |
-| Note | Description | Swiggy order |
+| Column       | Description        | Example          |
+| ------------ | ------------------ | ---------------- |
+| Date         | Transaction date   | 2026-04-05       |
+| Account      | Bank/card name     | HDFC Savings     |
+| Category     | Spending category  | Food             |
+| Sub Category | Specific type      | Groceries        |
+| Type         | Transaction type   | Expense / Income |
+| Amount       | Transaction amount | 5000             |
+| Note         | Description        | Swiggy order     |
 
 Transfers (Transfer-In, Transfer-Out, Income Balance) are automatically filtered out during processing.
 
@@ -145,11 +149,11 @@ Transfers (Transfer-In, Transfer-Out, Income Balance) are automatically filtered
 
 Transactions are auto-classified into three buckets based on category:
 
-| Classification | Categories | Color |
-|---------------|-----------|-------|
-| **Needs** | Food, Transport, Health, Household, Phone, Haircut, Education | Blue |
-| **Wants** | Shopping, Social Life, Travel, Beauty, Gift, Culture, Fun & Activities, Other, Petty cash | Orange |
-| **Investments** | Investment | Green |
+| Classification  | Categories                                                                                | Color  |
+| --------------- | ----------------------------------------------------------------------------------------- | ------ |
+| **Needs**       | Food, Transport, Health, Household, Phone, Haircut, Education                             | Blue   |
+| **Wants**       | Shopping, Social Life, Travel, Beauty, Gift, Culture, Fun & Activities, Other, Petty cash | Orange |
+| **Investments** | Investment                                                                                | Green  |
 
 Food transactions are further split: groceries and cooking gas → Needs; dining out, ordering → Wants.
 
