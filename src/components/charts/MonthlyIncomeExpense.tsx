@@ -15,7 +15,7 @@ export function MonthlyIncomeExpenseChart({ data }: { data: MonthlyTrend[] }) {
 
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <ComposedChart data={chartData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
+      <ComposedChart data={chartData} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
         <XAxis dataKey="monthLabel" tick={{ fontSize: 11 }} />
         <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}K`} />

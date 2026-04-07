@@ -18,6 +18,12 @@ export const metadata: Metadata = {
   description: "Upload your expense sheet and get instant insights",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{

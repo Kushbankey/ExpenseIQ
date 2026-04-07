@@ -74,60 +74,64 @@ export default function TransactionsPage() {
 
       {/* Filters */}
       <Card>
-        <div className="flex flex-wrap gap-3">
-          <div className="relative flex-1 min-w-[200px]">
+        <div className="space-y-3">
+          {/* Search — full width */}
+          <div className="relative">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search transactions..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(0); }}
-              className="w-full pl-9 pr-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-400"
+              className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-400 bg-gray-50/50"
             />
           </div>
-          <select
-            value={typeFilter}
-            onChange={(e) => { setTypeFilter(e.target.value); setClassFilter(''); setPage(0); }}
-            className="px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200"
-          >
-            <option value="">All Types</option>
-            <option value="Income">Income</option>
-            <option value="Expense">Expense</option>
-          </select>
-          <select
-            value={categoryFilter}
-            onChange={(e) => { setCategoryFilter(e.target.value); setPage(0); }}
-            className="px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200"
-          >
-            <option value="">All Categories</option>
-            {categories.map((c) => <option key={c} value={c}>{c}</option>)}
-          </select>
-          <select
-            value={accountFilter}
-            onChange={(e) => { setAccountFilter(e.target.value); setPage(0); }}
-            className="px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200"
-          >
-            <option value="">All Accounts</option>
-            {accounts.map((a) => <option key={a} value={a}>{a}</option>)}
-          </select>
-          {typeFilter !== 'Income' && (
+          {/* Filter pills — 2-col on mobile, row on desktop */}
+          <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2">
             <select
-              value={classFilter}
-              onChange={(e) => { setClassFilter(e.target.value); setPage(0); }}
-              className="px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200"
+              value={typeFilter}
+              onChange={(e) => { setTypeFilter(e.target.value); setClassFilter(''); setPage(0); }}
+              className="w-full md:w-auto px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-violet-200"
             >
-              <option value="">All Classifications</option>
-              <option value="Need">Needs</option>
-              <option value="Want">Wants</option>
-              <option value="Investment">Investments</option>
+              <option value="">All Types</option>
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
             </select>
-          )}
+            <select
+              value={categoryFilter}
+              onChange={(e) => { setCategoryFilter(e.target.value); setPage(0); }}
+              className="w-full md:w-auto px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-violet-200"
+            >
+              <option value="">All Categories</option>
+              {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+            <select
+              value={accountFilter}
+              onChange={(e) => { setAccountFilter(e.target.value); setPage(0); }}
+              className="w-full md:w-auto px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-violet-200"
+            >
+              <option value="">All Accounts</option>
+              {accounts.map((a) => <option key={a} value={a}>{a}</option>)}
+            </select>
+            {typeFilter !== 'Income' && (
+              <select
+                value={classFilter}
+                onChange={(e) => { setClassFilter(e.target.value); setPage(0); }}
+                className="w-full md:w-auto px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-violet-200"
+              >
+                <option value="">All Classifications</option>
+                <option value="Need">Needs</option>
+                <option value="Want">Wants</option>
+                <option value="Investment">Investments</option>
+              </select>
+            )}
+          </div>
         </div>
       </Card>
 
-      {/* Table */}
+      {/* Table — desktop */}
       <Card>
-        <div className="overflow-x-auto">
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
@@ -162,6 +166,33 @@ export default function TransactionsPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile card layout */}
+        <div className="md:hidden space-y-3">
+          {paginated.map((txn, i) => (
+            <div key={i} className="border-b border-gray-50 pb-3 last:border-0 last:pb-0">
+              <div className="flex items-start justify-between">
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-gray-800 truncate">{txn.note || txn.subcategory}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{txn.category} &middot; {formatDate(txn.date)}</p>
+                  <p className="text-xs text-gray-400">{txn.account}</p>
+                </div>
+                <div className="text-right ml-3 flex-shrink-0">
+                  <p className={`text-sm font-semibold ${txn.txnType === 'Income' ? 'text-green-600' : 'text-red-500'}`}>
+                    {txn.txnType === 'Income' ? '+' : ''}{formatINR(txn.amount)}
+                  </p>
+                  <div className="mt-1">
+                    {isExpense(txn) ? (
+                      <Badge classification={txn.classification} />
+                    ) : (
+                      <Badge classification="Income" />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Pagination */}

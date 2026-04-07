@@ -80,7 +80,7 @@ export function SpendingLineChart({
         <ResponsiveContainer width="100%" height={340}>
             <LineChart
                 data={chartData}
-                margin={{ top: 5, right: 10, left: 5, bottom: 5 }}
+                margin={{ top: 5, right: 10, left: -15, bottom: 5 }}
             >
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="day" tick={{ fontSize: 11 }} />

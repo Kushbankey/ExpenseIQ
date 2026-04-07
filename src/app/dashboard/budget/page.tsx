@@ -29,7 +29,7 @@ export default function BudgetPage() {
       </Card>
 
       {/* Gap Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {gaps.map((g) => {
           const diff = g.actual - g.target;
           const isOver = diff > 0;

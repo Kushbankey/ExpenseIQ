@@ -35,7 +35,7 @@ export function InvestmentTracker({
             </div>
 
             {/* SIP list */}
-            <div className="space-y-1 max-h-[380px] overflow-y-auto">
+            <div className="space-y-1 max-h-[400px] overflow-y-auto box-border">
                 {data.sips.map((sip) => (
                     <div
                         key={`${sip.name}-${sip.amount}`}
