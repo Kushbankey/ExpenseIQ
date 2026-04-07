@@ -2,10 +2,13 @@
 
 A modern, mobile-responsive personal finance dashboard that transforms your bank's Excel export into actionable financial insights. Upload your expense sheet and instantly see where your money goes — categorized, classified, and visualized.
 
+**Live:** [expenseeiq.netlify.app](https://expenseeiq.netlify.app)
+
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss)
 ![Supabase](https://img.shields.io/badge/Supabase-Auth_&_DB-3ECF8E?logo=supabase)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/deploy-status/deploy-status.svg)](https://expenseeiq.netlify.app)
 
 ## Features
 
