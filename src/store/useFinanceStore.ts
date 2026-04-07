@@ -10,21 +10,29 @@ import { analyzeAccounts } from '@/lib/analytics/accounts';
 import { analyzeBudget } from '@/lib/analytics/budget';
 import { analyzeRecurring } from '@/lib/analytics/recurring';
 import { generateInsights } from '@/lib/analytics/insights';
+import { createClient } from '@/lib/supabase/client';
+import { serializeFinanceData, deserializeFinanceData } from '@/lib/serialization';
 
 interface FinanceStore {
   data: FinanceData | null;
   isLoaded: boolean;
   isProcessing: boolean;
+  isRestoring: boolean;
   error: string | null;
+  fileName: string | null;
   processFile: (file: File) => Promise<void>;
+  saveToSupabase: (file?: File) => Promise<void>;
+  restoreFromSupabase: () => Promise<boolean>;
   reset: () => void;
 }
 
-export const useFinanceStore = create<FinanceStore>((set) => ({
+export const useFinanceStore = create<FinanceStore>((set, get) => ({
   data: null,
   isLoaded: false,
   isProcessing: false,
+  isRestoring: false,
   error: null,
+  fileName: null,
 
   processFile: async (file: File) => {
     set({ isProcessing: true, error: null });
@@ -60,7 +68,11 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
         },
         isLoaded: true,
         isProcessing: false,
+        fileName: file.name,
       });
+
+      // Save to Supabase in background
+      get().saveToSupabase(file);
     } catch (err) {
       set({
         error: err instanceof Error ? err.message : 'Failed to process file',
@@ -69,5 +81,72 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
     }
   },
 
-  reset: () => set({ data: null, isLoaded: false, error: null }),
+  saveToSupabase: async (file?: File) => {
+    const { data, fileName } = get();
+    if (!data) return;
+
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Save processed data as JSONB
+      const serialized = serializeFinanceData(data);
+      await supabase
+        .from('user_data')
+        .upsert({
+          user_id: user.id,
+          finance_data: serialized,
+          file_name: fileName ?? 'unknown.xlsx',
+          uploaded_at: new Date().toISOString(),
+        }, { onConflict: 'user_id' });
+
+      // Upload Excel file to Storage
+      if (file) {
+        await supabase.storage
+          .from('excel-files')
+          .upload(`${user.id}/${file.name}`, file, { upsert: true });
+      }
+    } catch (err) {
+      console.error('Failed to save to Supabase:', err);
+    }
+  },
+
+  restoreFromSupabase: async () => {
+    set({ isRestoring: true });
+
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        set({ isRestoring: false });
+        return false;
+      }
+
+      const { data: row } = await supabase
+        .from('user_data')
+        .select('finance_data, file_name')
+        .eq('user_id', user.id)
+        .single();
+
+      if (row) {
+        const financeData = deserializeFinanceData(row.finance_data);
+        set({
+          data: financeData,
+          isLoaded: true,
+          isRestoring: false,
+          fileName: row.file_name,
+        });
+        return true;
+      }
+
+      set({ isRestoring: false });
+      return false;
+    } catch {
+      set({ isRestoring: false });
+      return false;
+    }
+  },
+
+  reset: () => set({ data: null, isLoaded: false, isRestoring: false, error: null, fileName: null }),
 }));

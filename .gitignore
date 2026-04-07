@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude Code local settings (contains machine-specific paths/API keys)
+**/.claude/settings.local.json
+.claude/local.md
+
+# Claude hooks and temporary command outputs
+.claude/hooks/*
+!.claude/hooks/*.py  # Keep shared hook scripts if desired
+.claude/commands/opsx/
+sandbox-*/
+
+# Custom ignore file for Claude's internal scanning
+.claudeignore
