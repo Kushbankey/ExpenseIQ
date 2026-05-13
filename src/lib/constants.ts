@@ -62,6 +62,7 @@ export const NAV_ITEMS = [
   { label: 'Merchants', href: '/dashboard/merchants', icon: 'Store' },
   { label: 'Budget', href: '/dashboard/budget', icon: 'Target' },
   { label: 'Insights', href: '/dashboard/insights', icon: 'Lightbulb' },
+  { label: 'Settings', href: '/dashboard/settings', icon: 'Settings' },
 ] as const;
 
 export const RECURRING_SUBCATEGORIES = ['Gym', 'Recharge', 'Music', 'Movie', 'Data addon'];

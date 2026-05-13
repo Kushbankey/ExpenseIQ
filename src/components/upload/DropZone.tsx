@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation';
 import { Upload, FileSpreadsheet, Loader2, AlertCircle } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
 
-export function DropZone() {
+interface DropZoneProps {
+  onSuccess?: () => void;
+}
+
+export function DropZone({ onSuccess }: DropZoneProps = {}) {
   const router = useRouter();
   const { processFile, isProcessing, error } = useFinanceStore();
   const [isDragging, setIsDragging] = useState(false);
@@ -17,11 +21,14 @@ export function DropZone() {
       }
       await processFile(file);
       const store = useFinanceStore.getState();
-      if (store.isLoaded) {
+      if (!store.isLoaded) return;
+      if (onSuccess) {
+        onSuccess();
+      } else {
         router.push('/dashboard');
       }
     },
-    [processFile, router]
+    [processFile, router, onSuccess]
   );
 
   const onDrop = useCallback(

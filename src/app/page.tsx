@@ -17,8 +17,14 @@ export default function Home() {
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
       setUser(user);
+      if (user) {
+        const store = useFinanceStore.getState();
+        if (!store.isLoaded && !store.isRestoring) {
+          await store.restoreFromSupabase();
+        }
+      }
       setChecking(false);
     });
   }, []);
