@@ -139,6 +139,84 @@ export interface SipInfo {
   typicalDay: number;
 }
 
+export interface DayOfWeekStat {
+  day: number; // 0=Sun, 6=Sat
+  label: string;
+  amount: number;
+  count: number;
+}
+
+export interface DayOfMonthStat {
+  day: number; // 1-31
+  amount: number;
+  amountExInvestments: number;
+  count: number;
+}
+
+export interface CalendarHeatmapCell {
+  date: string; // YYYY-MM-DD
+  amount: number;
+  count: number;
+}
+
+export interface TemporalStats {
+  dayOfWeek: DayOfWeekStat[];
+  dayOfMonth: DayOfMonthStat[];
+  calendar: CalendarHeatmapCell[];
+  weekendAmount: number;
+  weekdayAmount: number;
+  weekendCount: number;
+  weekdayCount: number;
+  weekendPct: number;
+  firstWeekShareExInv: number; // % of non-investment spend in days 1-5
+}
+
+export interface MerchantStat {
+  name: string;
+  normalizedName: string;
+  count: number;
+  total: number;
+  avg: number;
+  categories: string[]; // distinct categories this merchant appears in
+  firstSeen: string; // YYYY-MM-DD
+  lastSeen: string;
+}
+
+export interface MerchantStats {
+  byTotal: MerchantStat[];
+  byFrequency: MerchantStat[];
+  scatter: { name: string; visits: number; avgTicket: number; total: number; category: string }[];
+}
+
+export interface PortfolioBucket {
+  type: string; // 'Index', 'Smallcap', 'Midcap', 'Flexicap', 'Gold', 'International', 'Crypto', 'Other'
+  total: number;
+  monthlyAvg: number;
+  count: number;
+  funds: { name: string; total: number; count: number }[];
+}
+
+export interface PortfolioMix {
+  buckets: PortfolioBucket[];
+  totalInvested: number;
+}
+
+export interface SankeyNode {
+  id: string;
+  nodeColor?: string;
+}
+
+export interface SankeyLink {
+  source: string;
+  target: string;
+  value: number;
+}
+
+export interface SankeyData {
+  nodes: SankeyNode[];
+  links: SankeyLink[];
+}
+
 export interface FinanceData {
   expenses: ExpenseTransaction[];
   income: Transaction[];
@@ -152,4 +230,8 @@ export interface FinanceData {
   creditCard: CreditCardData;
   recurring: RecurringExpense[];
   insights: InsightData;
+  temporal: TemporalStats;
+  merchants: MerchantStats;
+  portfolio: PortfolioMix;
+  sankey: SankeyData;
 }

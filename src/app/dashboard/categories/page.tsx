@@ -5,13 +5,17 @@ import { useFinanceStore } from "@/store/useFinanceStore";
 import { Card } from "@/components/ui/Card";
 import { CategoryDonutChart } from "@/components/charts/CategoryPieChart";
 import { CategoryMonthlyTrend } from "@/components/charts/CategoryMonthlyTrend";
+import { CategoryTreemap } from "@/components/charts/CategoryTreemap";
 import { formatINR } from "@/lib/formatters";
 import { CATEGORY_COLORS } from "@/lib/constants";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, PieChart, Grid3x3 } from "lucide-react";
+
+type View = 'donut' | 'treemap';
 
 export default function CategoriesPage() {
     const data = useFinanceStore((s) => s.data);
     const [expanded, setExpanded] = useState<string | null>(null);
+    const [view, setView] = useState<View>('donut');
 
     const topCategories = useMemo(() => {
         if (!data) return [];
@@ -32,9 +36,37 @@ export default function CategoriesPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Donut Chart */}
-                <Card title="Distribution">
-                    <CategoryDonutChart categories={data.categoryAnalysis} />
+                {/* Donut / Treemap toggle */}
+                <Card
+                    title="Distribution"
+                    action={
+                        <div className="inline-flex bg-gray-100 rounded-lg p-0.5">
+                            <button
+                                onClick={() => setView('donut')}
+                                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+                                    view === 'donut' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'
+                                }`}
+                            >
+                                <PieChart size={12} />
+                                Donut
+                            </button>
+                            <button
+                                onClick={() => setView('treemap')}
+                                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+                                    view === 'treemap' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'
+                                }`}
+                            >
+                                <Grid3x3 size={12} />
+                                Treemap
+                            </button>
+                        </div>
+                    }
+                >
+                    {view === 'donut' ? (
+                        <CategoryDonutChart categories={data.categoryAnalysis} />
+                    ) : (
+                        <CategoryTreemap categories={data.categoryAnalysis} />
+                    )}
                 </Card>
 
                 {/* Category List */}

@@ -33,6 +33,11 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# user data (bank statements / expense sheets — never commit)
+*.xlsx
+*.xls
+*.csv
+
 # vercel
 .vercel
 

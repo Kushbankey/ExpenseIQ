@@ -10,6 +10,10 @@ import { analyzeAccounts } from '@/lib/analytics/accounts';
 import { analyzeBudget } from '@/lib/analytics/budget';
 import { analyzeRecurring } from '@/lib/analytics/recurring';
 import { generateInsights } from '@/lib/analytics/insights';
+import { analyzeTemporal } from '@/lib/analytics/temporal';
+import { analyzeMerchants } from '@/lib/analytics/merchants';
+import { analyzePortfolio } from '@/lib/analytics/portfolio';
+import { buildSankeyData } from '@/lib/analytics/flow';
 import { createClient } from '@/lib/supabase/client';
 import { serializeFinanceData, deserializeFinanceData } from '@/lib/serialization';
 
@@ -50,6 +54,10 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
       const { accounts, creditCard } = analyzeAccounts(expenses, income);
       const recurring = analyzeRecurring(expenses);
       const insights = generateInsights(expenses, income, categoryAnalysis, monthlyTrends, summary.numMonths);
+      const temporal = analyzeTemporal(expenses);
+      const merchants = analyzeMerchants(expenses);
+      const portfolio = analyzePortfolio(expenses);
+      const sankey = buildSankeyData(expenses, income);
 
       set({
         data: {
@@ -65,6 +73,10 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
           creditCard,
           recurring,
           insights,
+          temporal,
+          merchants,
+          portfolio,
+          sankey,
         },
         isLoaded: true,
         isProcessing: false,

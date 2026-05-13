@@ -40,3 +40,17 @@ body {
 .safe-area-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+/* Remove browser default focus outlines on chart elements (recharts + nivo) */
+.recharts-wrapper svg *:focus,
+.recharts-wrapper svg *:focus-visible,
+.recharts-surface *:focus,
+.recharts-surface *:focus-visible,
+.recharts-sector,
+.recharts-rectangle,
+.recharts-bar-rectangle,
+.recharts-pie-sector path,
+[class*="nivo"] svg *:focus,
+[class*="nivo"] svg *:focus-visible {
+  outline: none !important;
+}

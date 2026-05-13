@@ -9,6 +9,8 @@ import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 import { RecurringExpenses } from '@/components/dashboard/RecurringExpenses';
 import { InvestmentTracker } from '@/components/dashboard/InvestmentTracker';
 import { SpendingLineChart } from '@/components/charts/SpendingLineChart';
+import { IncomeSankey } from '@/components/charts/IncomeSankey';
+import { PortfolioMix } from '@/components/charts/PortfolioMix';
 import Link from 'next/link';
 
 export default function OverviewPage() {
@@ -72,17 +74,28 @@ export default function OverviewPage() {
         </Card>
       </div>
 
-      {/* Row 4: Recurring Expenses */}
-      <Card
-        title="Recurring Expenses"
-        action={
-          <Link href="/dashboard/insights" className="text-xs text-violet-600 font-medium hover:underline">
-            See all &rsaquo;
-          </Link>
-        }
-      >
-        <RecurringExpenses recurring={data.recurring} />
+      {/* Row 4: Income flow Sankey */}
+      <Card title="Where Your Money Flows">
+        <IncomeSankey data={data.sankey} />
       </Card>
+
+      {/* Row 5: Portfolio Mix + Recurring Expenses */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card title="Investment Mix">
+          <PortfolioMix portfolio={data.portfolio} />
+        </Card>
+
+        <Card
+          title="Recurring Expenses"
+          action={
+            <Link href="/dashboard/insights" className="text-xs text-violet-600 font-medium hover:underline">
+              See all &rsaquo;
+            </Link>
+          }
+        >
+          <RecurringExpenses recurring={data.recurring} />
+        </Card>
+      </div>
     </div>
   );
 }

@@ -58,6 +58,8 @@ export const NAV_ITEMS = [
   { label: 'Categories', href: '/dashboard/categories', icon: 'PieChart' },
   { label: 'Accounts', href: '/dashboard/accounts', icon: 'Wallet' },
   { label: 'Trends', href: '/dashboard/trends', icon: 'TrendingUp' },
+  { label: 'Patterns', href: '/dashboard/patterns', icon: 'CalendarDays' },
+  { label: 'Merchants', href: '/dashboard/merchants', icon: 'Store' },
   { label: 'Budget', href: '/dashboard/budget', icon: 'Target' },
   { label: 'Insights', href: '/dashboard/insights', icon: 'Lightbulb' },
 ] as const;

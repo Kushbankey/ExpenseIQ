@@ -13,6 +13,8 @@ import {
   TrendingUp,
   Target,
   Lightbulb,
+  CalendarDays,
+  Store,
   IndianRupee,
   LogOut,
   Menu,
@@ -27,6 +29,8 @@ const iconMap: Record<string, React.ComponentType<{ size?: number; className?: s
   TrendingUp,
   Target,
   Lightbulb,
+  CalendarDays,
+  Store,
 };
 
 const NAV_ITEMS = [
@@ -35,6 +39,8 @@ const NAV_ITEMS = [
   { label: 'Categories', href: '/dashboard/categories', icon: 'PieChart' },
   { label: 'Accounts', href: '/dashboard/accounts', icon: 'Wallet' },
   { label: 'Trends', href: '/dashboard/trends', icon: 'TrendingUp' },
+  { label: 'Patterns', href: '/dashboard/patterns', icon: 'CalendarDays' },
+  { label: 'Merchants', href: '/dashboard/merchants', icon: 'Store' },
   { label: 'Budget', href: '/dashboard/budget', icon: 'Target' },
   { label: 'Insights', href: '/dashboard/insights', icon: 'Lightbulb' },
 ];
@@ -75,7 +81,7 @@ export function Sidebar() {
     router.refresh();
   };
 
-  const isMoreActive = ['/dashboard/accounts', '/dashboard/budget', '/dashboard/insights'].includes(pathname);
+  const isMoreActive = ['/dashboard/accounts', '/dashboard/budget', '/dashboard/insights', '/dashboard/patterns', '/dashboard/merchants'].includes(pathname);
 
   return (
     <>
