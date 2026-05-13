@@ -82,10 +82,10 @@ export function SpendingLineChart({
                 data={chartData}
                 margin={{ top: 5, right: 10, left: -15, bottom: 5 }}
             >
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="day" tick={{ fontSize: 11 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
+                <XAxis dataKey="day" tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} />
                 <YAxis
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
                     tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}K`}
                 />
                 <Tooltip formatter={(value) => formatINR(Number(value))} />

@@ -15,9 +15,9 @@ export function SavingsRateChart({ data }: { data: MonthlyTrend[] }) {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={chartData} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-        <XAxis dataKey="monthLabel" tick={{ fontSize: 11 }} />
-        <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${v}%`} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
+        <XAxis dataKey="monthLabel" tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} />
+        <YAxis tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} tickFormatter={(v) => `${v}%`} />
         <Tooltip formatter={(value) => [`${Number(value).toFixed(1)}%`, 'Savings Rate']} />
         <ReferenceLine y={20} stroke="#f59e0b" strokeDasharray="5 5" label={{ value: '20% target', position: 'right', fontSize: 10 }} />
         <Bar dataKey="savingsRate" name="Savings Rate" radius={[4, 4, 0, 0]}>

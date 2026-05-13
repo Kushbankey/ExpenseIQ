@@ -20,10 +20,10 @@ export function DayOfWeekChart({ data }: Props) {
   return (
     <ResponsiveContainer width="100%" height={280}>
       <BarChart data={ordered} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-        <XAxis dataKey="label" tick={{ fontSize: 11 }} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+        <XAxis dataKey="label" tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} />
         <YAxis
-          tick={{ fontSize: 11 }}
+          tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
           tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}K`}
         />
         <Tooltip

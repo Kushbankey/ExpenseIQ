@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { ResponsiveSankey } from '@nivo/sankey';
 import { formatINR } from '@/lib/formatters';
+import { useTheme } from '@/components/providers/ThemeProvider';
 import type { SankeyData } from '@/lib/types';
 
 interface Props {
@@ -11,6 +12,8 @@ interface Props {
 
 export function IncomeSankey({ data }: Props) {
   const [isNarrow, setIsNarrow] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 640px)');
@@ -21,12 +24,16 @@ export function IncomeSankey({ data }: Props) {
   }, []);
 
   if (!data.nodes.length || !data.links.length) {
-    return <div className="text-sm text-gray-400 py-8 text-center">No flow data yet.</div>;
+    return <div className="text-sm text-gray-400 dark:text-gray-500 py-8 text-center">No flow data yet.</div>;
   }
 
   const margin = isNarrow
     ? { top: 8, right: 88, bottom: 8, left: 8 }
     : { top: 10, right: 140, bottom: 10, left: 80 };
+
+  const labelMods: Array<['brighter' | 'darker', number]> = isDark
+    ? [['brighter', 1.1]]
+    : [['darker', 1.6]];
 
   return (
     <div className="overflow-x-auto -mx-1 px-1">
@@ -47,18 +54,26 @@ export function IncomeSankey({ data }: Props) {
           nodeSpacing={isNarrow ? 10 : 16}
           nodeBorderWidth={0}
           nodeBorderRadius={3}
-          linkOpacity={0.45}
+          linkOpacity={isDark ? 0.85 : 0.45}
           linkHoverOthersOpacity={0.1}
           linkContract={3}
+          linkBlendMode={isDark ? 'normal' : 'multiply'}
           enableLinkGradient={true}
           labelPosition={isNarrow ? 'inside' : 'outside'}
           labelOrientation="horizontal"
           labelPadding={isNarrow ? 4 : 8}
-          labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+          labelTextColor={{ from: 'color', modifiers: labelMods }}
           valueFormat={(v) => formatINR(Number(v))}
           theme={{
             labels: { text: { fontSize: isNarrow ? 10 : 11, fontWeight: 500 } },
-            tooltip: { container: { fontSize: 12 } },
+            tooltip: {
+              container: {
+                fontSize: 12,
+                background: isDark ? '#1a1a1e' : '#ffffff',
+                color: isDark ? '#f5f5f7' : '#111827',
+                border: `1px solid ${isDark ? '#2e2e35' : '#e5e7eb'}`,
+              },
+            },
           }}
         />
       </div>

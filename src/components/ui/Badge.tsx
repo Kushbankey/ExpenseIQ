@@ -12,8 +12,8 @@ export function Badge({ classification }: { classification: Classification | 'In
   const color = BADGE_COLORS[classification];
   return (
     <span
-      className="text-xs font-medium px-2.5 py-0.5 rounded-full"
-      style={{ backgroundColor: `${color}15`, color }}
+      className="text-xs font-medium px-2.5 py-0.5 rounded-full dark:[background-color:color-mix(in_srgb,var(--badge-color)_22%,transparent)]"
+      style={{ backgroundColor: `${color}1f`, color, ['--badge-color' as string]: color }}
     >
       {classification}
     </span>

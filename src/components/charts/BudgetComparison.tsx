@@ -15,9 +15,9 @@ export function BudgetComparisonChart({ data }: { data: NeedsWantsResult }) {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={chartData} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-        <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-        <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${v}%`} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
+        <XAxis dataKey="name" tick={{ fontSize: 12, fill: 'var(--text-secondary)' }} />
+        <YAxis tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} tickFormatter={(v) => `${v}%`} />
         <Tooltip formatter={(value) => [`${value}%`]} />
         <Legend />
         <Bar dataKey="actual" name="Actual" fill="#8b5cf6" radius={[4, 4, 0, 0]} barSize={40} />

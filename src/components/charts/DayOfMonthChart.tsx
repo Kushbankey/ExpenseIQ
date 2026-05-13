@@ -20,7 +20,7 @@ export function DayOfMonthChart({ data }: Props) {
   return (
     <div>
       <div className="flex items-center justify-end mb-2">
-        <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer select-none">
+        <label className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 cursor-pointer select-none">
           <input
             type="checkbox"
             checked={excludeInv}
@@ -32,10 +32,10 @@ export function DayOfMonthChart({ data }: Props) {
       </div>
       <ResponsiveContainer width="100%" height={260}>
         <BarChart data={display} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-          <XAxis dataKey="day" tick={{ fontSize: 10 }} interval={2} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+          <XAxis dataKey="day" tick={{ fontSize: 10, fill: 'var(--text-secondary)' }} interval={2} />
           <YAxis
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
             tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}K`}
           />
           <Tooltip

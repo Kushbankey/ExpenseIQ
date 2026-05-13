@@ -68,8 +68,8 @@ export default function TransactionsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
-        <p className="text-sm text-gray-500 mt-1">{filtered.length.toLocaleString()} transactions</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Transactions</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{filtered.length.toLocaleString()} transactions</p>
       </div>
 
       {/* Filters */}
@@ -77,13 +77,13 @@ export default function TransactionsPage() {
         <div className="space-y-3">
           {/* Search — full width */}
           <div className="relative">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               placeholder="Search transactions..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(0); }}
-              className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-400 bg-gray-50/50"
+              className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-200 dark:focus:ring-violet-500/30 focus:border-violet-400 dark:focus:border-violet-500 bg-gray-50/50 dark:bg-[#1a1a1e]"
             />
           </div>
           {/* Filter pills — 2-col on mobile, row on desktop */}
@@ -91,7 +91,7 @@ export default function TransactionsPage() {
             <select
               value={typeFilter}
               onChange={(e) => { setTypeFilter(e.target.value); setClassFilter(''); setPage(0); }}
-              className="w-full md:w-auto px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-violet-200"
+              className="w-full md:w-auto px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 text-sm text-gray-900 dark:text-gray-100 bg-gray-50/50 dark:bg-[#1a1a1e] focus:outline-none focus:ring-2 focus:ring-violet-200 dark:focus:ring-violet-500/30"
             >
               <option value="">All Types</option>
               <option value="Income">Income</option>
@@ -100,7 +100,7 @@ export default function TransactionsPage() {
             <select
               value={categoryFilter}
               onChange={(e) => { setCategoryFilter(e.target.value); setPage(0); }}
-              className="w-full md:w-auto px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-violet-200"
+              className="w-full md:w-auto px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 text-sm text-gray-900 dark:text-gray-100 bg-gray-50/50 dark:bg-[#1a1a1e] focus:outline-none focus:ring-2 focus:ring-violet-200 dark:focus:ring-violet-500/30"
             >
               <option value="">All Categories</option>
               {categories.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -108,7 +108,7 @@ export default function TransactionsPage() {
             <select
               value={accountFilter}
               onChange={(e) => { setAccountFilter(e.target.value); setPage(0); }}
-              className="w-full md:w-auto px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-violet-200"
+              className="w-full md:w-auto px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 text-sm text-gray-900 dark:text-gray-100 bg-gray-50/50 dark:bg-[#1a1a1e] focus:outline-none focus:ring-2 focus:ring-violet-200 dark:focus:ring-violet-500/30"
             >
               <option value="">All Accounts</option>
               {accounts.map((a) => <option key={a} value={a}>{a}</option>)}
@@ -117,7 +117,7 @@ export default function TransactionsPage() {
               <select
                 value={classFilter}
                 onChange={(e) => { setClassFilter(e.target.value); setPage(0); }}
-                className="w-full md:w-auto px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-violet-200"
+                className="w-full md:w-auto px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 text-sm text-gray-900 dark:text-gray-100 bg-gray-50/50 dark:bg-[#1a1a1e] focus:outline-none focus:ring-2 focus:ring-violet-200 dark:focus:ring-violet-500/30"
               >
                 <option value="">All Classifications</option>
                 <option value="Need">Needs</option>
@@ -134,24 +134,24 @@ export default function TransactionsPage() {
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100">
-                <th className="text-left py-3 px-2 text-gray-500 font-medium">Date</th>
-                <th className="text-left py-3 px-2 text-gray-500 font-medium">Category</th>
-                <th className="text-left py-3 px-2 text-gray-500 font-medium">Subcategory</th>
-                <th className="text-left py-3 px-2 text-gray-500 font-medium">Note</th>
-                <th className="text-left py-3 px-2 text-gray-500 font-medium">Account</th>
-                <th className="text-left py-3 px-2 text-gray-500 font-medium">Type</th>
-                <th className="text-right py-3 px-2 text-gray-500 font-medium">Amount</th>
+              <tr className="border-b border-gray-100 dark:border-gray-800/80">
+                <th className="text-left py-3 px-2 text-gray-500 dark:text-gray-400 font-medium">Date</th>
+                <th className="text-left py-3 px-2 text-gray-500 dark:text-gray-400 font-medium">Category</th>
+                <th className="text-left py-3 px-2 text-gray-500 dark:text-gray-400 font-medium">Subcategory</th>
+                <th className="text-left py-3 px-2 text-gray-500 dark:text-gray-400 font-medium">Note</th>
+                <th className="text-left py-3 px-2 text-gray-500 dark:text-gray-400 font-medium">Account</th>
+                <th className="text-left py-3 px-2 text-gray-500 dark:text-gray-400 font-medium">Type</th>
+                <th className="text-right py-3 px-2 text-gray-500 dark:text-gray-400 font-medium">Amount</th>
               </tr>
             </thead>
             <tbody>
               {paginated.map((txn, i) => (
-                <tr key={i} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                  <td className="py-2.5 px-2 text-gray-600 whitespace-nowrap">{formatDate(txn.date)}</td>
-                  <td className="py-2.5 px-2 text-gray-800">{txn.category}</td>
-                  <td className="py-2.5 px-2 text-gray-600">{txn.subcategory}</td>
-                  <td className="py-2.5 px-2 text-gray-600 max-w-[200px] truncate">{txn.note}</td>
-                  <td className="py-2.5 px-2 text-gray-600 whitespace-nowrap">{txn.account}</td>
+                <tr key={i} className="border-b border-gray-50 dark:border-gray-800/60 hover:bg-gray-50/50 dark:hover:bg-gray-800/40 transition-colors">
+                  <td className="py-2.5 px-2 text-gray-600 dark:text-gray-300 whitespace-nowrap">{formatDate(txn.date)}</td>
+                  <td className="py-2.5 px-2 text-gray-800 dark:text-gray-100">{txn.category}</td>
+                  <td className="py-2.5 px-2 text-gray-600 dark:text-gray-300">{txn.subcategory}</td>
+                  <td className="py-2.5 px-2 text-gray-600 dark:text-gray-300 max-w-[200px] truncate">{txn.note}</td>
+                  <td className="py-2.5 px-2 text-gray-600 dark:text-gray-300 whitespace-nowrap">{txn.account}</td>
                   <td className="py-2.5 px-2">
                     {isExpense(txn) ? (
                       <Badge classification={txn.classification} />
@@ -159,7 +159,7 @@ export default function TransactionsPage() {
                       <Badge classification="Income" />
                     )}
                   </td>
-                  <td className={`py-2.5 px-2 text-right font-semibold ${txn.txnType === 'Income' ? 'text-green-600' : 'text-red-500'}`}>
+                  <td className={`py-2.5 px-2 text-right font-semibold ${txn.txnType === 'Income' ? 'text-green-600 dark:text-emerald-300' : 'text-red-500 dark:text-red-300'}`}>
                     {txn.txnType === 'Income' ? '+' : ''}{formatINR(txn.amount)}
                   </td>
                 </tr>
@@ -171,15 +171,15 @@ export default function TransactionsPage() {
         {/* Mobile card layout */}
         <div className="md:hidden space-y-3">
           {paginated.map((txn, i) => (
-            <div key={i} className="border-b border-gray-50 pb-3 last:border-0 last:pb-0">
+            <div key={i} className="border-b border-gray-50 dark:border-gray-800/60 pb-3 last:border-0 last:pb-0">
               <div className="flex items-start justify-between">
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-gray-800 truncate">{txn.note || txn.subcategory}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{txn.category} &middot; {formatDate(txn.date)}</p>
-                  <p className="text-xs text-gray-400">{txn.account}</p>
+                  <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{txn.note || txn.subcategory}</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{txn.category} &middot; {formatDate(txn.date)}</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500">{txn.account}</p>
                 </div>
                 <div className="text-right ml-3 flex-shrink-0">
-                  <p className={`text-sm font-semibold ${txn.txnType === 'Income' ? 'text-green-600' : 'text-red-500'}`}>
+                  <p className={`text-sm font-semibold ${txn.txnType === 'Income' ? 'text-green-600 dark:text-emerald-300' : 'text-red-500 dark:text-red-300'}`}>
                     {txn.txnType === 'Income' ? '+' : ''}{formatINR(txn.amount)}
                   </p>
                   <div className="mt-1">
@@ -197,22 +197,22 @@ export default function TransactionsPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
-            <p className="text-xs text-gray-400">
+          <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100 dark:border-gray-800/80">
+            <p className="text-xs text-gray-400 dark:text-gray-500">
               Showing {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
             </p>
             <div className="flex gap-2">
               <button
                 onClick={() => setPage(Math.max(0, page - 1))}
                 disabled={page === 0}
-                className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50"
+                className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-200 disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-800/60"
               >
                 Previous
               </button>
               <button
                 onClick={() => setPage(Math.min(totalPages - 1, page + 1))}
                 disabled={page >= totalPages - 1}
-                className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50"
+                className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-200 disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-800/60"
               >
                 Next
               </button>

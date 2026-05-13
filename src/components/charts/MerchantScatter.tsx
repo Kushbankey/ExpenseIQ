@@ -20,7 +20,7 @@ const FALLBACK = '#8b5cf6';
 
 export function MerchantScatter({ data }: Props) {
   if (data.length === 0) {
-    return <div className="text-sm text-gray-400 py-8 text-center">No repeating merchants yet.</div>;
+    return <div className="text-sm text-gray-400 dark:text-gray-500 py-8 text-center">No repeating merchants yet.</div>;
   }
 
   // Group by category — one Scatter series per category for distinct color + legend
@@ -39,21 +39,21 @@ export function MerchantScatter({ data }: Props) {
   return (
     <ResponsiveContainer width="100%" height={400}>
       <ScatterChart margin={{ top: 10, right: 15, left: 5, bottom: 25 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
         <XAxis
           type="number"
           dataKey="visits"
           name="Visits"
-          tick={{ fontSize: 11 }}
-          label={{ value: 'Visits', position: 'insideBottom', offset: -10, fontSize: 11, fill: '#6b7280' }}
+          tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
+          label={{ value: 'Visits', position: 'insideBottom', offset: -10, fontSize: 11, fill: 'var(--text-secondary)' }}
         />
         <YAxis
           type="number"
           dataKey="avgTicket"
           name="Avg ticket"
-          tick={{ fontSize: 11 }}
+          tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
           tickFormatter={(v) => formatCompactINR(v)}
-          label={{ value: 'Avg ticket', angle: -90, position: 'insideLeft', fontSize: 11, fill: '#6b7280' }}
+          label={{ value: 'Avg ticket', angle: -90, position: 'insideLeft', fontSize: 11, fill: 'var(--text-secondary)' }}
         />
         <ZAxis type="number" dataKey="total" range={[60, 600]} name="Total" />
         <Tooltip
@@ -62,13 +62,13 @@ export function MerchantScatter({ data }: Props) {
             if (!active || !payload || !payload[0]) return null;
             const d = payload[0].payload as ScatterPoint;
             return (
-              <div className="bg-white border border-gray-200 rounded-lg shadow-sm px-3 py-2 text-xs">
-                <p className="font-semibold text-gray-900">{d.name}</p>
-                <p className="text-gray-500 mt-0.5">{d.category}</p>
+              <div className="bg-white dark:bg-[#1a1a1e] border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm px-3 py-2 text-xs">
+                <p className="font-semibold text-gray-900 dark:text-gray-100">{d.name}</p>
+                <p className="text-gray-500 dark:text-gray-400 mt-0.5">{d.category}</p>
                 <div className="mt-1.5 space-y-0.5">
-                  <p className="text-gray-700">Visits: <span className="font-medium">{d.visits}</span></p>
-                  <p className="text-gray-700">Avg: <span className="font-medium">{formatINR(d.avgTicket)}</span></p>
-                  <p className="text-gray-700">Total: <span className="font-medium">{formatINR(d.total)}</span></p>
+                  <p className="text-gray-700 dark:text-gray-300">Visits: <span className="font-medium">{d.visits}</span></p>
+                  <p className="text-gray-700 dark:text-gray-300">Avg: <span className="font-medium">{formatINR(d.avgTicket)}</span></p>
+                  <p className="text-gray-700 dark:text-gray-300">Total: <span className="font-medium">{formatINR(d.total)}</span></p>
                 </div>
               </div>
             );

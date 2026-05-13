@@ -24,32 +24,32 @@ export default function AccountsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Accounts</h1>
-        <p className="text-sm text-gray-500 mt-1">Account usage and credit card analysis</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Accounts</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Account usage and credit card analysis</p>
       </div>
 
       {/* Account Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {data.accounts.map((acc) => (
-          <div key={acc.account} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+          <div key={acc.account} className="bg-white dark:bg-[#131316] rounded-2xl shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800/80 p-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-violet-50 dark:bg-violet-500/15 flex items-center justify-center">
                 {acc.isCreditCard ? (
-                  <CreditCard size={16} className="text-violet-600" />
+                  <CreditCard size={16} className="text-violet-600 dark:text-violet-300" />
                 ) : (
-                  <Building2 size={16} className="text-violet-600" />
+                  <Building2 size={16} className="text-violet-600 dark:text-violet-300" />
                 )}
               </div>
-              <p className="text-sm font-semibold text-gray-800">{acc.account}</p>
+              <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">{acc.account}</p>
             </div>
-            <p className="text-lg font-bold text-gray-900">{formatINR(acc.totalSpent)}</p>
-            <p className="text-xs text-gray-400">{acc.txnCount} transactions</p>
+            <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{formatINR(acc.totalSpent)}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500">{acc.txnCount} transactions</p>
             {acc.currentMonthSpent > 0 && (
-              <div className="mt-2 pt-2 border-t border-gray-100 flex items-center gap-1.5">
-                <TrendingDown size={12} className="text-red-400" />
-                <p className="text-xs text-gray-500">
-                  This month: <span className="font-semibold text-gray-700">{formatINR(acc.currentMonthSpent)}</span>
-                  <span className="text-gray-400"> · {acc.currentMonthTxns} txns</span>
+              <div className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-800/80 flex items-center gap-1.5">
+                <TrendingDown size={12} className="text-red-400 dark:text-red-300" />
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  This month: <span className="font-semibold text-gray-700 dark:text-gray-200">{formatINR(acc.currentMonthSpent)}</span>
+                  <span className="text-gray-400 dark:text-gray-500"> · {acc.currentMonthTxns} txns</span>
                 </p>
               </div>
             )}
@@ -81,9 +81,9 @@ export default function AccountsPage() {
         <Card title={`${ccName} — Category Breakdown`}>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {data.creditCard.byCategory.slice(0, 9).map((item) => (
-              <div key={item.category} className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-xl">
-                <span className="text-sm text-gray-700">{item.category}</span>
-                <span className="text-sm font-semibold text-gray-900">{formatINR(item.amount)}</span>
+              <div key={item.category} className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-800/40 rounded-xl">
+                <span className="text-sm text-gray-700 dark:text-gray-200">{item.category}</span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">{formatINR(item.amount)}</span>
               </div>
             ))}
           </div>

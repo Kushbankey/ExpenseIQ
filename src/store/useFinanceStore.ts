@@ -14,6 +14,8 @@ import { analyzeTemporal } from '@/lib/analytics/temporal';
 import { analyzeMerchants } from '@/lib/analytics/merchants';
 import { analyzePortfolio } from '@/lib/analytics/portfolio';
 import { buildSankeyData } from '@/lib/analytics/flow';
+import { computeProjection, computeDiscretionary } from '@/lib/analytics/projection';
+import { detectAnomalies } from '@/lib/analytics/anomalies';
 import { createClient } from '@/lib/supabase/client';
 import { serializeFinanceData, deserializeFinanceData } from '@/lib/serialization';
 
@@ -58,6 +60,9 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
       const merchants = analyzeMerchants(expenses);
       const portfolio = analyzePortfolio(expenses);
       const sankey = buildSankeyData(expenses, income);
+      const projection = computeProjection(expenses, monthlyTrends, summary);
+      const discretionary = computeDiscretionary(income, monthlyClassification);
+      const alerts = detectAnomalies(expenses, recurring);
 
       set({
         data: {
@@ -77,6 +82,9 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
           merchants,
           portfolio,
           sankey,
+          projection,
+          discretionary,
+          alerts,
         },
         isLoaded: true,
         isProcessing: false,

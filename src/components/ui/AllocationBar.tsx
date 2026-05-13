@@ -35,8 +35,8 @@ export function AllocationBar({ data }: AllocationBarProps) {
             <div className="flex items-center gap-3">
               <div className="w-1 h-8 rounded-full" style={{ backgroundColor: seg.color }} />
               <div>
-                <p className="text-sm font-semibold text-gray-900">{seg.key}</p>
-                <p className="text-xs text-gray-400">
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{seg.key}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">
                   {formatPercent(seg.pct)} of total
                 </p>
               </div>

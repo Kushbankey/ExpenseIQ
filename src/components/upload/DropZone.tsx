@@ -59,8 +59,8 @@ export function DropZone({ onSuccess }: DropZoneProps = {}) {
       onDrop={onDrop}
       className={`relative border-2 border-dashed rounded-3xl p-16 text-center transition-all duration-200 cursor-pointer ${
         isDragging
-          ? 'border-violet-400 bg-violet-50'
-          : 'border-gray-200 bg-white hover:border-violet-300 hover:bg-violet-50/30'
+          ? 'border-violet-400 bg-violet-50 dark:bg-violet-500/10'
+          : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-[#131316] hover:border-violet-300 dark:hover:border-violet-500/40 hover:bg-violet-50/30 dark:hover:bg-violet-500/5'
       }`}
     >
       <input
@@ -72,24 +72,24 @@ export function DropZone({ onSuccess }: DropZoneProps = {}) {
 
       {isProcessing ? (
         <div className="flex flex-col items-center gap-4">
-          <Loader2 size={48} className="text-violet-500 animate-spin" />
-          <p className="text-lg font-medium text-gray-700">Processing your data...</p>
-          <p className="text-sm text-gray-400">Analyzing transactions and generating insights</p>
+          <Loader2 size={48} className="text-violet-500 dark:text-violet-300 animate-spin" />
+          <p className="text-lg font-medium text-gray-700 dark:text-gray-200">Processing your data...</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500">Analyzing transactions and generating insights</p>
         </div>
       ) : (
         <div className="flex flex-col items-center gap-4">
-          <div className="w-20 h-20 rounded-2xl bg-violet-50 flex items-center justify-center">
+          <div className="w-20 h-20 rounded-2xl bg-violet-50 dark:bg-violet-500/10 flex items-center justify-center">
             {isDragging ? (
-              <FileSpreadsheet size={36} className="text-violet-500" />
+              <FileSpreadsheet size={36} className="text-violet-500 dark:text-violet-300" />
             ) : (
-              <Upload size={36} className="text-violet-400" />
+              <Upload size={36} className="text-violet-400 dark:text-violet-300" />
             )}
           </div>
           <div>
-            <p className="text-lg font-semibold text-gray-800">
+            <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">
               {isDragging ? 'Drop your file here' : 'Upload your expense sheet'}
             </p>
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
               Drag & drop your .xlsx file or click to browse
             </p>
           </div>
@@ -97,7 +97,7 @@ export function DropZone({ onSuccess }: DropZoneProps = {}) {
       )}
 
       {error && (
-        <div className="mt-4 flex items-center justify-center gap-2 text-red-500 text-sm">
+        <div className="mt-4 flex items-center justify-center gap-2 text-red-500 dark:text-red-300 text-sm">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>

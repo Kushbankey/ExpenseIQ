@@ -20,8 +20,8 @@ export default function BudgetPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">50/30/20 Budget Rule</h1>
-        <p className="text-sm text-gray-500 mt-1">Compare your spending against the recommended 50/30/20 rule</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">50/30/20 Budget Rule</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Compare your spending against the recommended 50/30/20 rule</p>
       </div>
 
       <Card title="Actual vs Target">
@@ -35,37 +35,37 @@ export default function BudgetPage() {
           const isOver = diff > 0;
 
           return (
-            <div key={g.label} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <div key={g.label} className="bg-white dark:bg-[#131316] rounded-2xl shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800/80 p-5">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: g.color }} />
-                <h3 className="font-semibold text-gray-800">{g.label}</h3>
+                <h3 className="font-semibold text-gray-800 dark:text-gray-100">{g.label}</h3>
               </div>
 
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Actual</span>
+                  <span className="text-gray-500 dark:text-gray-400">Actual</span>
                   <span className="font-bold" style={{ color: g.color }}>
                     {formatPercent(g.actual)}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Target</span>
-                  <span className="font-medium text-gray-600">{g.target}%</span>
+                  <span className="text-gray-500 dark:text-gray-400">Target</span>
+                  <span className="font-medium text-gray-600 dark:text-gray-300">{g.target}%</span>
                 </div>
-                <div className="flex justify-between text-sm border-t border-gray-100 pt-2">
-                  <span className="text-gray-500">Gap</span>
-                  <span className={`font-bold ${isOver ? 'text-red-500' : 'text-green-500'}`}>
+                <div className="flex justify-between text-sm border-t border-gray-100 dark:border-gray-800/80 pt-2">
+                  <span className="text-gray-500 dark:text-gray-400">Gap</span>
+                  <span className={`font-bold ${isOver ? 'text-red-500 dark:text-red-300' : 'text-green-500 dark:text-emerald-300'}`}>
                     {diff >= 0 ? '+' : ''}{diff.toFixed(1)}%
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Amount</span>
-                  <span className="font-medium text-gray-700">{formatINR(g.amount)}</span>
+                  <span className="text-gray-500 dark:text-gray-400">Amount</span>
+                  <span className="font-medium text-gray-700 dark:text-gray-200">{formatINR(g.amount)}</span>
                 </div>
               </div>
 
               {/* Progress bar */}
-              <div className="mt-3 h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="mt-3 h-2 bg-gray-100 dark:bg-gray-800/60 rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all"
                   style={{

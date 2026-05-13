@@ -6,9 +6,10 @@ import { Card } from "@/components/ui/Card";
 import { CategoryDonutChart } from "@/components/charts/CategoryPieChart";
 import { CategoryMonthlyTrend } from "@/components/charts/CategoryMonthlyTrend";
 import { CategoryTreemap } from "@/components/charts/CategoryTreemap";
+import { CompareMonths } from "@/components/dashboard/CompareMonths";
 import { formatINR } from "@/lib/formatters";
 import { CATEGORY_COLORS } from "@/lib/constants";
-import { ChevronDown, ChevronRight, PieChart, Grid3x3 } from "lucide-react";
+import { ChevronDown, ChevronRight, PieChart, Grid3x3, ArrowLeftRight } from "lucide-react";
 
 type View = 'donut' | 'treemap';
 
@@ -29,8 +30,8 @@ export default function CategoriesPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
-                <p className="text-sm text-gray-500 mt-1">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Categories</h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     Spending breakdown by category and subcategory
                 </p>
             </div>
@@ -40,11 +41,13 @@ export default function CategoriesPage() {
                 <Card
                     title="Distribution"
                     action={
-                        <div className="inline-flex bg-gray-100 rounded-lg p-0.5">
+                        <div className="inline-flex bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5">
                             <button
                                 onClick={() => setView('donut')}
                                 className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-                                    view === 'donut' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'
+                                    view === 'donut'
+                                        ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-gray-100'
+                                        : 'text-gray-500 dark:text-gray-400'
                                 }`}
                             >
                                 <PieChart size={12} />
@@ -53,7 +56,9 @@ export default function CategoriesPage() {
                             <button
                                 onClick={() => setView('treemap')}
                                 className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-                                    view === 'treemap' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'
+                                    view === 'treemap'
+                                        ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-gray-100'
+                                        : 'text-gray-500 dark:text-gray-400'
                                 }`}
                             >
                                 <Grid3x3 size={12} />
@@ -88,7 +93,7 @@ export default function CategoriesPage() {
                                 <div key={cat.category}>
                                     <button
                                         onClick={() => toggle(cat.category)}
-                                        className="w-full flex items-center justify-between py-3 px-2 rounded-xl hover:bg-gray-50 transition-colors"
+                                        className="w-full flex items-center justify-between py-3 px-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors"
                                     >
                                         <div className="flex items-center gap-3">
                                             <div
@@ -98,10 +103,10 @@ export default function CategoriesPage() {
                                                 }}
                                             />
                                             <div className="text-left">
-                                                <p className="text-sm font-medium text-gray-800">
+                                                <p className="text-sm font-medium text-gray-800 dark:text-gray-100">
                                                     {cat.category}
                                                 </p>
-                                                <p className="text-xs text-gray-400">
+                                                <p className="text-xs text-gray-400 dark:text-gray-500">
                                                     {cat.count} transactions
                                                     &middot;{" "}
                                                     {formatINR(cat.monthlyAvg)}
@@ -111,10 +116,10 @@ export default function CategoriesPage() {
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <div className="text-right">
-                                                <p className="text-sm font-bold text-gray-900">
+                                                <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
                                                     {formatINR(cat.total)}
                                                 </p>
-                                                <p className="text-xs text-gray-400">
+                                                <p className="text-xs text-gray-400 dark:text-gray-500">
                                                     {totalPct}%
                                                 </p>
                                             </div>
@@ -122,12 +127,12 @@ export default function CategoriesPage() {
                                                 (isExpanded ? (
                                                     <ChevronDown
                                                         size={16}
-                                                        className="text-gray-400"
+                                                        className="text-gray-400 dark:text-gray-500"
                                                     />
                                                 ) : (
                                                     <ChevronRight
                                                         size={16}
-                                                        className="text-gray-400"
+                                                        className="text-gray-400 dark:text-gray-500"
                                                     />
                                                 ))}
                                         </div>
@@ -140,14 +145,14 @@ export default function CategoriesPage() {
                                                     key={sub.subcategory}
                                                     className="flex items-center justify-between py-1.5 px-2 text-sm"
                                                 >
-                                                    <span className="text-gray-600">
+                                                    <span className="text-gray-600 dark:text-gray-300">
                                                         {sub.subcategory}
                                                     </span>
                                                     <div className="flex items-center gap-3">
-                                                        <span className="text-xs text-gray-400">
+                                                        <span className="text-xs text-gray-400 dark:text-gray-500">
                                                             {sub.count} txns
                                                         </span>
-                                                        <span className="font-medium text-gray-800">
+                                                        <span className="font-medium text-gray-800 dark:text-gray-200">
                                                             {formatINR(
                                                                 sub.total
                                                             )}
@@ -163,6 +168,19 @@ export default function CategoriesPage() {
                     </div>
                 </Card>
             </div>
+
+            {/* Compare two months */}
+            <Card
+                title="Compare two months"
+                action={
+                    <div className="inline-flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
+                        <ArrowLeftRight size={12} />
+                        <span>Pick any two months</span>
+                    </div>
+                }
+            >
+                <CompareMonths expenses={data.expenses} />
+            </Card>
 
             {/* Monthly Spending by Category */}
             <Card title="Monthly Spending — Top 5 Categories">

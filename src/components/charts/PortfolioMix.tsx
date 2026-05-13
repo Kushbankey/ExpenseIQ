@@ -27,7 +27,7 @@ export function PortfolioMix({ portfolio }: Props) {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   if (portfolio.buckets.length === 0) {
-    return <div className="text-sm text-gray-400 py-8 text-center">No investments tracked yet.</div>;
+    return <div className="text-sm text-gray-400 dark:text-gray-500 py-8 text-center">No investments tracked yet.</div>;
   }
 
   const pieData = portfolio.buckets.map((b) => ({
@@ -68,7 +68,7 @@ export function PortfolioMix({ portfolio }: Props) {
             <div key={b.type}>
               <button
                 onClick={() => hasMultipleFunds && toggle(b.type)}
-                className={`w-full flex items-center justify-between py-2 px-2 rounded-lg ${hasMultipleFunds ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-default'}`}
+                className={`w-full flex items-center justify-between py-2 px-2 rounded-lg ${hasMultipleFunds ? 'hover:bg-gray-50 dark:hover:bg-gray-800/60 cursor-pointer' : 'cursor-default'}`}
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <span
@@ -76,22 +76,22 @@ export function PortfolioMix({ portfolio }: Props) {
                     style={{ backgroundColor: TYPE_COLORS[b.type] || '#8b5cf6' }}
                   />
                   <div className="text-left min-w-0">
-                    <p className="text-sm font-medium text-gray-800 truncate">{b.type}</p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{b.type}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">
                       {formatINR(b.monthlyAvg)}/mo · {b.count} txns
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 flex-shrink-0">
                   <div className="text-right">
-                    <p className="text-sm font-semibold text-gray-900">{formatINR(b.total)}</p>
-                    <p className="text-xs text-gray-400">{pct.toFixed(1)}%</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{formatINR(b.total)}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">{pct.toFixed(1)}%</p>
                   </div>
                   {hasMultipleFunds &&
                     (isExpanded ? (
-                      <ChevronDown size={14} className="text-gray-400" />
+                      <ChevronDown size={14} className="text-gray-400 dark:text-gray-500" />
                     ) : (
-                      <ChevronRight size={14} className="text-gray-400" />
+                      <ChevronRight size={14} className="text-gray-400 dark:text-gray-500" />
                     ))}
                 </div>
               </button>
@@ -99,8 +99,8 @@ export function PortfolioMix({ portfolio }: Props) {
                 <div className="ml-5 mb-2 space-y-1">
                   {b.funds.map((f) => (
                     <div key={f.name} className="flex items-center justify-between py-1 px-2 text-xs">
-                      <span className="text-gray-600 truncate pr-2">{f.name}</span>
-                      <span className="font-medium text-gray-800 flex-shrink-0">{formatINR(f.total)}</span>
+                      <span className="text-gray-600 dark:text-gray-300 truncate pr-2">{f.name}</span>
+                      <span className="font-medium text-gray-800 dark:text-gray-200 flex-shrink-0">{formatINR(f.total)}</span>
                     </div>
                   ))}
                 </div>

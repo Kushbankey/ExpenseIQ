@@ -23,18 +23,20 @@ export default function MerchantsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Merchants</h1>
-        <p className="text-sm text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Merchants</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
           Where your money actually goes — derived from transaction notes
         </p>
       </div>
 
       {/* Toggle */}
-      <div className="inline-flex bg-gray-100 rounded-xl p-1">
+      <div className="inline-flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
         <button
           onClick={() => setMode('amount')}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            mode === 'amount' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'
+            mode === 'amount'
+              ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-gray-100'
+              : 'text-gray-500 dark:text-gray-400'
           }`}
         >
           <Store size={14} />
@@ -43,7 +45,9 @@ export default function MerchantsPage() {
         <button
           onClick={() => setMode('frequency')}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            mode === 'frequency' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'
+            mode === 'frequency'
+              ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-gray-100'
+              : 'text-gray-500 dark:text-gray-400'
           }`}
         >
           <Repeat size={14} />
@@ -54,7 +58,7 @@ export default function MerchantsPage() {
       {/* Leaderboard */}
       <Card title={mode === 'amount' ? 'Top Merchants by Spend' : 'Top Merchants by Frequency'}>
         {list.length === 0 ? (
-          <p className="text-sm text-gray-400 py-8 text-center">No repeating merchants detected yet.</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500 py-8 text-center">No repeating merchants detected yet.</p>
         ) : (
           <div className="space-y-2">
             {list.map((m, i) => {
@@ -65,24 +69,24 @@ export default function MerchantsPage() {
                 <div key={m.normalizedName} className="py-2">
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <span className="text-xs font-bold text-gray-300 w-5 flex-shrink-0">#{i + 1}</span>
+                      <span className="text-xs font-bold text-gray-300 dark:text-gray-600 w-5 flex-shrink-0">#{i + 1}</span>
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-gray-800 truncate">{m.name}</p>
-                        <p className="text-xs text-gray-400 truncate">
+                        <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{m.name}</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
                           {m.categories.join(', ')} · avg {formatINR(m.avg)}
                         </p>
                       </div>
                     </div>
                     <div className="text-right ml-3 flex-shrink-0">
-                      <p className="text-sm font-bold text-gray-900">
+                      <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
                         {mode === 'amount' ? formatINR(m.total) : `${m.count} visits`}
                       </p>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-gray-400 dark:text-gray-500">
                         {mode === 'amount' ? `${m.count} visits` : formatINR(m.total)}
                       </p>
                     </div>
                   </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full ml-8">
+                  <div className="h-1.5 bg-gray-100 dark:bg-gray-800/60 rounded-full ml-8">
                     <div
                       className="h-full rounded-full"
                       style={{ width: `${pct}%`, backgroundColor: color }}
@@ -97,7 +101,7 @@ export default function MerchantsPage() {
 
       {/* Scatter */}
       <Card title="Visits × Avg Ticket">
-        <p className="text-xs text-gray-400 mb-3">
+        <p className="text-xs text-gray-400 dark:text-gray-500 mb-3">
           Bubble size = total spend. Top-right = high-value frequent merchants.
         </p>
         <MerchantScatter data={merchants.scatter} />

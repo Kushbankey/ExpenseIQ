@@ -22,16 +22,16 @@ export function AccountUsageChart({ data }: { data: AccountData[] }) {
                 layout="vertical"
                 margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
             >
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
                 <XAxis
                     type="number"
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
                     tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}K`}
                 />
                 <YAxis
                     type="category"
                     dataKey="account"
-                    tick={{ fontSize: 10 }}
+                    tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
                     width={180}
                     tickFormatter={(v: string) =>
                         v.length > 22 ? v.slice(0, 20) + "…" : v

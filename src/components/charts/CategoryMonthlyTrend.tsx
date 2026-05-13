@@ -37,9 +37,9 @@ export function CategoryMonthlyTrend({ expenses, topCategories }: Props) {
   return (
     <ResponsiveContainer width="100%" height={350}>
       <LineChart data={chartData} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-        <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-        <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}K`} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
+        <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} />
+        <YAxis tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}K`} />
         <Tooltip formatter={(value) => formatINR(Number(value))} />
         <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '11px' }} />
         {topCategories.map((cat, i) => (

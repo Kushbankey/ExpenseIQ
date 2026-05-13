@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { createClient } from '@/lib/supabase/client';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import {
   LayoutDashboard,
   ArrowLeftRight,
@@ -48,7 +49,6 @@ const NAV_ITEMS = [
   { label: 'Settings', href: '/dashboard/settings', icon: 'Settings' },
 ];
 
-// Bottom nav shows a subset of icons for mobile
 const BOTTOM_NAV_ITEMS = [
   { label: 'Overview', href: '/dashboard', icon: 'LayoutDashboard' },
   { label: 'Txns', href: '/dashboard/transactions', icon: 'ArrowLeftRight' },
@@ -71,11 +71,6 @@ export function Sidebar() {
     });
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
-
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -89,17 +84,15 @@ export function Sidebar() {
   return (
     <>
       {/* Desktop Sidebar — hidden on mobile */}
-      <aside className="hidden md:flex w-60 bg-white border-r border-gray-100 h-screen flex-col fixed left-0 top-0 z-30">
-        {/* Logo */}
-        <div className="px-6 py-5 flex items-center gap-3 border-b border-gray-50">
+      <aside className="hidden md:flex w-60 bg-white dark:bg-[#131316] border-r border-gray-100 dark:border-gray-800 h-screen flex-col fixed left-0 top-0 z-30">
+        <div className="px-6 py-5 flex items-center gap-3 border-b border-gray-50 dark:border-gray-800/60">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
             <IndianRupee size={18} className="text-white" />
           </div>
-          <span className="font-bold text-lg text-gray-900">ExpenseIQ</span>
+          <span className="font-bold text-lg text-gray-900 dark:text-gray-100">ExpenseIQ</span>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href;
             const Icon = iconMap[item.icon];
@@ -110,8 +103,8 @@ export function Sidebar() {
                 href={item.href}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-violet-50 text-violet-700'
-                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
+                    ? 'bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-300'
+                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800/60 dark:hover:text-gray-100'
                 }`}
               >
                 {Icon && <Icon size={18} />}
@@ -121,14 +114,16 @@ export function Sidebar() {
           })}
         </nav>
 
-        {/* User + Sign Out */}
-        <div className="px-3 py-4 border-t border-gray-50 space-y-2">
+        <div className="px-3 py-3 border-t border-gray-50 dark:border-gray-800/60 space-y-2">
+          <div className="px-1">
+            <ThemeToggle />
+          </div>
           {email && (
-            <p className="text-xs text-gray-400 truncate px-3">{email}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 truncate px-3">{email}</p>
           )}
           <button
             onClick={handleSignOut}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors w-full"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-red-50 hover:text-red-600 dark:text-gray-400 dark:hover:bg-red-500/10 dark:hover:text-red-400 transition-colors w-full"
           >
             <LogOut size={18} />
             Sign out
@@ -137,7 +132,7 @@ export function Sidebar() {
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 safe-area-bottom">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-[#131316] border-t border-gray-200 dark:border-gray-800 z-40 safe-area-bottom">
         <div className="flex items-center justify-around h-16">
           {BOTTOM_NAV_ITEMS.map((item) => {
             if (item.href === '#more') {
@@ -146,7 +141,7 @@ export function Sidebar() {
                   key="more"
                   onClick={() => setMobileMenuOpen(true)}
                   className={`flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors ${
-                    isMoreActive ? 'text-violet-600' : 'text-gray-400'
+                    isMoreActive ? 'text-violet-600 dark:text-violet-400' : 'text-gray-400 dark:text-gray-500'
                   }`}
                 >
                   <Menu size={20} />
@@ -163,7 +158,7 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={`flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors ${
-                  isActive ? 'text-violet-600' : 'text-gray-400'
+                  isActive ? 'text-violet-600 dark:text-violet-400' : 'text-gray-400 dark:text-gray-500'
                 }`}
               >
                 {Icon && <Icon size={20} />}
@@ -177,25 +172,23 @@ export function Sidebar() {
       {/* Mobile "More" Menu Overlay */}
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-50">
-          {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/40 dark:bg-black/60"
             onClick={() => setMobileMenuOpen(false)}
           />
-          {/* Slide-up panel */}
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl max-h-[80vh] overflow-y-auto safe-area-bottom">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <div className="absolute bottom-0 left-0 right-0 bg-white dark:bg-[#131316] rounded-t-2xl shadow-xl max-h-[80vh] overflow-y-auto safe-area-bottom">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-800">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                   <IndianRupee size={14} className="text-white" />
                 </div>
-                <span className="font-bold text-gray-900">ExpenseIQ</span>
+                <span className="font-bold text-gray-900 dark:text-gray-100">ExpenseIQ</span>
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100"
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
               >
-                <X size={18} className="text-gray-500" />
+                <X size={18} className="text-gray-500 dark:text-gray-400" />
               </button>
             </div>
 
@@ -208,10 +201,11 @@ export function Sidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                       isActive
-                        ? 'bg-violet-50 text-violet-700'
-                        : 'text-gray-600 hover:bg-gray-50'
+                        ? 'bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-300'
+                        : 'text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800/60'
                     }`}
                   >
                     {Icon && <Icon size={18} />}
@@ -221,13 +215,16 @@ export function Sidebar() {
               })}
             </nav>
 
-            <div className="px-3 py-3 border-t border-gray-100 space-y-2">
+            <div className="px-3 py-3 border-t border-gray-100 dark:border-gray-800 space-y-3">
+              <div className="px-1">
+                <ThemeToggle />
+              </div>
               {email && (
-                <p className="text-xs text-gray-400 truncate px-4">{email}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 truncate px-4">{email}</p>
               )}
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-colors w-full"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10 transition-colors w-full"
               >
                 <LogOut size={18} />
                 Sign out

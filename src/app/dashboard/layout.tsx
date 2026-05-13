@@ -20,12 +20,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (isRestoring) {
     return (
-      <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg-app)] flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center mx-auto mb-3 animate-pulse">
             <IndianRupee size={20} className="text-white" />
           </div>
-          <p className="text-sm text-gray-500">Restoring your data...</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Restoring your data...</p>
         </div>
       </div>
     );
@@ -34,7 +34,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!isLoaded) return null;
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7]">
+    <div className="min-h-screen bg-[var(--bg-app)]">
       <Sidebar />
       <main className="md:ml-60 p-4 md:p-6 pb-24 md:pb-6">
         {children}

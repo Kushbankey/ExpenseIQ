@@ -24,11 +24,11 @@ export function InvestmentTracker({
         <div className="space-y-3">
             {/* This month status */}
             <div className="flex items-center gap-4 text-xs">
-                <span className="flex items-center gap-1 text-green-600 font-medium">
+                <span className="flex items-center gap-1 text-green-600 dark:text-green-400 font-medium">
                     <CheckCircle2 size={12} /> {doneCount} done this month
                 </span>
                 {pendingCount > 0 && (
-                    <span className="flex items-center gap-1 text-amber-600 font-medium">
+                    <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400 font-medium">
                         <Clock size={12} /> {pendingCount} pending
                     </span>
                 )}
@@ -39,32 +39,32 @@ export function InvestmentTracker({
                 {data.sips.map((sip) => (
                     <div
                         key={`${sip.name}-${sip.amount}`}
-                        className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors"
                     >
                         <div className="flex items-center gap-2.5 min-w-0 flex-1">
                             {sip.doneThisMonth ? (
                                 <CheckCircle2
                                     size={15}
-                                    className="text-green-500 flex-shrink-0"
+                                    className="text-green-500 dark:text-green-400 flex-shrink-0"
                                 />
                             ) : (
                                 <Clock
                                     size={15}
-                                    className="text-amber-400 flex-shrink-0"
+                                    className="text-amber-400 dark:text-amber-300 flex-shrink-0"
                                 />
                             )}
                             <div className="min-w-0">
-                                <p className="text-sm text-gray-800 truncate">
+                                <p className="text-sm text-gray-800 dark:text-gray-100 truncate">
                                     {sip.name}
                                 </p>
-                                <p className="text-xs text-gray-400 flex items-center gap-1">
+                                <p className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1">
                                     <Calendar size={10} />~
                                     {ordinal(sip.typicalDay)} &middot;{" "}
                                     {sip.monthsActive}mo active
                                 </p>
                             </div>
                         </div>
-                        <p className="text-sm font-semibold text-gray-900 flex-shrink-0 ml-2">
+                        <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 flex-shrink-0 ml-2">
                             {formatINR(sip.amount)}
                         </p>
                     </div>

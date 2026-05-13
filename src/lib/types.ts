@@ -95,6 +95,9 @@ export interface RecurringExpense {
   avgAmount: number;
   frequency: string;
   typicalDay: number; // typical day-of-month (e.g. 5 for "around the 5th")
+  lastAmount: number;
+  priceChanged: boolean;
+  priceDeltaPct: number; // % change from earliest to latest payment
 }
 
 export interface InsightData {
@@ -217,6 +220,82 @@ export interface SankeyData {
   links: SankeyLink[];
 }
 
+export interface ProjectionStats {
+  // Month-end projection for the latest (current) month
+  currentMonth: string;
+  daysElapsed: number;
+  daysInMonth: number;
+  monthToDate: number;
+  projectedTotal: number;
+  trailing3Avg: number;
+  projectedVsAvgPct: number; // % delta of projectedTotal vs trailing3Avg
+  // Runway: months of pure-expense buffer from cumulative net savings
+  cumulativeNetSavings: number;
+  avgMonthlyPureExpense: number;
+  runwayMonths: number;
+}
+
+export interface DiscretionaryPoint {
+  month: string;
+  income: number;
+  needs: number;
+  investments: number;
+  discretionary: number; // income - needs - investments (what's left for wants + savings)
+}
+
+export interface CategorySpike {
+  category: string;
+  classification: Classification;
+  currentMonthSpend: number;
+  projectedSpend: number;
+  trailing3Avg: number;
+  ratio: number; // projected / trailing3Avg
+  severity: 'high' | 'medium';
+}
+
+export interface OutlierTxn {
+  date: Date;
+  category: string;
+  subcategory: string;
+  note: string;
+  amount: number;
+  subcatMedian: number;
+  multiplier: number; // amount / subcatMedian
+}
+
+export interface DuplicateCluster {
+  amount: number;
+  date: string; // YYYY-MM-DD — duplicates share a date
+  category: string;
+  subcategory: string;
+  note: string;
+  count: number;
+}
+
+export interface SubscriptionDrift {
+  name: string;
+  subcategory: string;
+  earliestAmount: number;
+  latestAmount: number;
+  deltaPct: number;
+  paymentCount: number;
+}
+
+export interface AnomalyAlerts {
+  spikes: CategorySpike[];
+  outliers: OutlierTxn[];
+  duplicates: DuplicateCluster[];
+  drifts: SubscriptionDrift[];
+}
+
+export interface CompareDelta {
+  category: string;
+  monthA: number; // amount in month A
+  monthB: number; // amount in month B
+  delta: number; // monthB - monthA
+  pctChange: number; // (delta / monthA) * 100; 0 if monthA is 0
+}
+
 export interface FinanceData {
   expenses: ExpenseTransaction[];
   income: Transaction[];
@@ -234,4 +313,7 @@ export interface FinanceData {
   merchants: MerchantStats;
   portfolio: PortfolioMix;
   sankey: SankeyData;
+  projection: ProjectionStats;
+  alerts: AnomalyAlerts;
+  discretionary: DiscretionaryPoint[];
 }

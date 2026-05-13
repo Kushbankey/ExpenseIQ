@@ -4,6 +4,8 @@ import { useFinanceStore } from '@/store/useFinanceStore';
 import { Card } from '@/components/ui/Card';
 import { AllocationBar } from '@/components/ui/AllocationBar';
 import { SummaryCards } from '@/components/dashboard/SummaryCards';
+import { ProjectionCard } from '@/components/dashboard/ProjectionCard';
+import { RunwayCard } from '@/components/dashboard/RunwayCard';
 import { CategoryBreakdownList } from '@/components/dashboard/CategoryBreakdownList';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 import { RecurringExpenses } from '@/components/dashboard/RecurringExpenses';
@@ -21,18 +23,24 @@ export default function OverviewPage() {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Overview</h1>
-        <p className="text-sm text-gray-500 mt-1">{data.summary.dateRange} &middot; {data.summary.numTransactions.toLocaleString()} transactions</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Overview</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{data.summary.dateRange} &middot; {data.summary.numTransactions.toLocaleString()} transactions</p>
       </div>
 
       {/* Summary Cards */}
       <SummaryCards summary={data.summary} />
 
-      {/* Row 2: Allocation + Spending Chart */}
+      {/* Row 2: Projection + Runway */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+        <ProjectionCard projection={data.projection} />
+        <RunwayCard projection={data.projection} />
+      </div>
+
+      {/* Row 3: Allocation + Spending Chart */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card title="Allocation">
           <AllocationBar data={data.needsWants} />
-          <div className="mt-4 pt-3 border-t border-gray-50">
+          <div className="mt-4 pt-3 border-t border-gray-50 dark:border-gray-800/60">
             <CategoryBreakdownList categories={data.categoryAnalysis} limit={4} />
           </div>
         </Card>
@@ -40,7 +48,7 @@ export default function OverviewPage() {
         <Card
           title="Spending This Month"
           action={
-            <Link href="/dashboard/trends" className="text-xs text-violet-600 font-medium hover:underline">
+            <Link href="/dashboard/trends" className="text-xs text-violet-600 dark:text-violet-300 font-medium hover:underline">
               See all &rsaquo;
             </Link>
           }
@@ -54,7 +62,7 @@ export default function OverviewPage() {
         <Card
           title="Monthly SIPs"
           action={
-            <Link href="/dashboard/insights" className="text-xs text-violet-600 font-medium hover:underline">
+            <Link href="/dashboard/insights" className="text-xs text-violet-600 dark:text-violet-300 font-medium hover:underline">
               See all &rsaquo;
             </Link>
           }
@@ -65,7 +73,7 @@ export default function OverviewPage() {
         <Card
           title="Recent Transactions"
           action={
-            <Link href="/dashboard/transactions" className="text-xs text-violet-600 font-medium hover:underline">
+            <Link href="/dashboard/transactions" className="text-xs text-violet-600 dark:text-violet-300 font-medium hover:underline">
               See all &rsaquo;
             </Link>
           }
@@ -88,7 +96,7 @@ export default function OverviewPage() {
         <Card
           title="Recurring Expenses"
           action={
-            <Link href="/dashboard/insights" className="text-xs text-violet-600 font-medium hover:underline">
+            <Link href="/dashboard/insights" className="text-xs text-violet-600 dark:text-violet-300 font-medium hover:underline">
               See all &rsaquo;
             </Link>
           }

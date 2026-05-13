@@ -18,19 +18,19 @@ export function RecentTransactions({
             {recent.map((txn, i) => (
                 <div
                     key={i}
-                    className="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0"
+                    className="flex items-center justify-between py-2.5 border-b border-gray-50 dark:border-gray-800/60 last:border-0"
                 >
                     <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-base">
+                        <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-gray-50 dark:bg-gray-800/60 flex items-center justify-center text-base">
                             {txn.category.match(
                                 /\p{Emoji_Presentation}/u
                             )?.[0] || "💳"}
                         </div>
                         <div className="min-w-0">
-                            <p className="text-sm font-medium text-gray-800 truncate">
+                            <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
                                 {txn.note || txn.subcategory}
                             </p>
-                            <p className="text-xs text-gray-400">
+                            <p className="text-xs text-gray-400 dark:text-gray-500">
                                 {txn.subcategory}
                             </p>
                         </div>
@@ -38,10 +38,10 @@ export function RecentTransactions({
                     <div className="flex items-center gap-3 flex-shrink-0 ml-2">
                         <Badge classification={txn.classification} />
                         <div className="text-right min-w-[80px]">
-                            <p className="text-sm font-semibold text-red-500">
+                            <p className="text-sm font-semibold text-red-500 dark:text-red-400">
                                 -{formatINR(txn.amount)}
                             </p>
-                            <p className="text-xs text-gray-400">
+                            <p className="text-xs text-gray-400 dark:text-gray-500">
                                 {formatDateShort(txn.date)}
                             </p>
                         </div>
