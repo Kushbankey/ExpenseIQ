@@ -84,10 +84,19 @@ export default function CategoriesPage() {
                             );
                             const color =
                                 CATEGORY_COLORS[cat.category] || "#6b7280";
-                            const totalPct = (
-                                (cat.total / data.summary.totalExpense) *
-                                100
-                            ).toFixed(1);
+                            // Investment category is denominated against income
+                            // (it's not consumption). Other categories are
+                            // denominated against true spending (Needs + Wants).
+                            const isInvestment = cat.category === "📈Investment";
+                            const denom = isInvestment
+                                ? data.summary.totalIncome
+                                : data.summary.totalSpending;
+                            const totalPct = denom > 0
+                                ? ((cat.total / denom) * 100).toFixed(1)
+                                : "0.0";
+                            const pctSuffix = isInvestment
+                                ? "% of income"
+                                : "% of spend";
 
                             return (
                                 <div key={cat.category}>
@@ -120,7 +129,7 @@ export default function CategoriesPage() {
                                                     {formatINR(cat.total)}
                                                 </p>
                                                 <p className="text-xs text-gray-400 dark:text-gray-500">
-                                                    {totalPct}%
+                                                    {totalPct}{pctSuffix}
                                                 </p>
                                             </div>
                                             {subcats.length > 1 &&

@@ -12,16 +12,23 @@ export default function BudgetPage() {
 
   const { needsWants } = data;
   const gaps = [
-    { label: 'Needs', actual: needsWants.need.pct, target: 50, amount: needsWants.need.amount, color: CLASSIFICATION_COLORS.Need },
-    { label: 'Wants', actual: needsWants.want.pct, target: 30, amount: needsWants.want.amount, color: CLASSIFICATION_COLORS.Want },
-    { label: 'Investments', actual: needsWants.investment.pct, target: 20, amount: needsWants.investment.amount, color: CLASSIFICATION_COLORS.Investment },
+    { label: 'Needs', actual: needsWants.need.pct, target: 50, amount: needsWants.need.amount, color: CLASSIFICATION_COLORS.Need, sub: null },
+    { label: 'Wants', actual: needsWants.want.pct, target: 30, amount: needsWants.want.amount, color: CLASSIFICATION_COLORS.Want, sub: null },
+    {
+      label: 'Savings',
+      actual: needsWants.savings.pct,
+      target: 20,
+      amount: needsWants.savings.amount,
+      color: CLASSIFICATION_COLORS.Investment,
+      sub: `Invested ${formatINR(needsWants.savings.breakdown.investments)} · Cash ${formatINR(needsWants.savings.breakdown.cash)}`,
+    },
   ];
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">50/30/20 Budget Rule</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Compare your spending against the recommended 50/30/20 rule</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Share of income going to Needs, Wants, and Savings (investments + cash buffer)</p>
       </div>
 
       <Card title="Actual vs Target">
@@ -32,7 +39,9 @@ export default function BudgetPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {gaps.map((g) => {
           const diff = g.actual - g.target;
-          const isOver = diff > 0;
+          // For Needs/Wants, over-target is bad. For Savings, over-target is good.
+          const overIsGood = g.label === 'Savings';
+          const gapIsHealthy = overIsGood ? diff >= 0 : diff <= 0;
 
           return (
             <div key={g.label} className="bg-white dark:bg-[#131316] rounded-2xl shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800/80 p-5">
@@ -54,7 +63,7 @@ export default function BudgetPage() {
                 </div>
                 <div className="flex justify-between text-sm border-t border-gray-100 dark:border-gray-800/80 pt-2">
                   <span className="text-gray-500 dark:text-gray-400">Gap</span>
-                  <span className={`font-bold ${isOver ? 'text-red-500 dark:text-red-300' : 'text-green-500 dark:text-emerald-300'}`}>
+                  <span className={`font-bold ${gapIsHealthy ? 'text-green-500 dark:text-emerald-300' : 'text-red-500 dark:text-red-300'}`}>
                     {diff >= 0 ? '+' : ''}{diff.toFixed(1)}%
                   </span>
                 </div>
@@ -69,11 +78,15 @@ export default function BudgetPage() {
                 <div
                   className="h-full rounded-full transition-all"
                   style={{
-                    width: `${Math.min(g.actual, 100)}%`,
+                    width: `${Math.min(Math.max(g.actual, 0), 100)}%`,
                     backgroundColor: g.color,
                   }}
                 />
               </div>
+
+              {g.sub && (
+                <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">{g.sub}</p>
+              )}
             </div>
           );
         })}

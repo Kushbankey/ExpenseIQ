@@ -52,14 +52,14 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
       const summary = computeSummary(expenses, income);
       const { categories: categoryAnalysis, subcategories: subcategoryAnalysis } = analyzeCategories(expenses);
       const { trends: monthlyTrends, classification: monthlyClassification } = analyzeMonthly(expenses, income);
-      const needsWants = analyzeBudget(expenses);
+      const needsWants = analyzeBudget(expenses, income);
       const { accounts, creditCard } = analyzeAccounts(expenses, income);
       const recurring = analyzeRecurring(expenses);
       const insights = generateInsights(expenses, income, categoryAnalysis, monthlyTrends, summary.numMonths);
       const temporal = analyzeTemporal(expenses);
       const merchants = analyzeMerchants(expenses);
       const portfolio = analyzePortfolio(expenses);
-      const sankey = buildSankeyData(expenses, income);
+      const sankey = buildSankeyData(expenses, income, portfolio);
       const projection = computeProjection(expenses, monthlyTrends, summary);
       const discretionary = computeDiscretionary(income, monthlyClassification);
       const alerts = detectAnomalies(expenses, recurring);

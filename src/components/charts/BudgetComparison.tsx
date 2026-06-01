@@ -9,7 +9,7 @@ export function BudgetComparisonChart({ data }: { data: NeedsWantsResult }) {
   const chartData = [
     { name: 'Needs', actual: parseFloat(data.need.pct.toFixed(1)), target: 50 },
     { name: 'Wants', actual: parseFloat(data.want.pct.toFixed(1)), target: 30 },
-    { name: 'Investments', actual: parseFloat(data.investment.pct.toFixed(1)), target: 20 },
+    { name: 'Savings', actual: parseFloat(data.savings.pct.toFixed(1)), target: 20 },
   ];
 
   return (

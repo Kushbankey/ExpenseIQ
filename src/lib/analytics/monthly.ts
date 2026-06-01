@@ -4,10 +4,14 @@ export function analyzeMonthly(
   expenses: ExpenseTransaction[],
   income: Transaction[]
 ): { trends: MonthlyTrend[]; classification: MonthlyClassification[] } {
-  // Aggregate expenses by month
+  // Aggregate per month: outflow (= spending + investments) and spending alone.
   const expMap = new Map<string, number>();
+  const spendMap = new Map<string, number>();
   for (const t of expenses) {
     expMap.set(t.month, (expMap.get(t.month) || 0) + t.amount);
+    if (t.classification !== 'Investment') {
+      spendMap.set(t.month, (spendMap.get(t.month) || 0) + t.amount);
+    }
   }
 
   // Aggregate income by month
@@ -21,8 +25,10 @@ export function analyzeMonthly(
 
   const trends: MonthlyTrend[] = allMonths.map((month) => {
     const expense = expMap.get(month) || 0;
+    const spending = spendMap.get(month) || 0;
     const inc = incMap.get(month) || 0;
-    const net = inc - expense;
+    // Net savings counts investments as saved, not consumed: income − spending.
+    const net = inc - spending;
     const savingsRate = inc > 0 ? (net / inc) * 100 : 0;
     return { month, income: inc, expense, net, savingsRate, expenseMA3: 0 };
   });

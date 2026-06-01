@@ -1,13 +1,28 @@
-import type { ExpenseTransaction, Transaction, SankeyData, SankeyNode, SankeyLink } from '../types';
+import type {
+  ExpenseTransaction,
+  Transaction,
+  SankeyData,
+  SankeyNode,
+  SankeyLink,
+  PortfolioMix,
+} from '../types';
 import { CHART_COLORS, CATEGORY_COLORS } from '../constants';
 
 /**
- * Builds Sankey flow data: Income sources → Total Income → Needs/Wants/Investments → Top categories.
- * Constraint: nivo's sankey requires acyclic flow, source value must equal sum of target values for each node.
+ * Sankey: Income sources → Income → {Needs, Wants, Savings} → leaves.
+ *
+ * Savings branches into Investments (subdivided by portfolio bucket) and
+ * a Cash residual. Investments are NOT a peer of Needs/Wants — they are
+ * a form of saving (deferred consumption), so they sit on the savings side
+ * of the flow.
+ *
+ * nivo's sankey requires acyclic flow with source value == sum of target
+ * values for each internal node, so we balance everything explicitly below.
  */
 export function buildSankeyData(
   expenses: ExpenseTransaction[],
-  income: Transaction[]
+  income: Transaction[],
+  portfolio?: PortfolioMix
 ): SankeyData {
   const nodes: SankeyNode[] = [];
   const links: SankeyLink[] = [];
@@ -19,7 +34,7 @@ export function buildSankeyData(
     nodes.push({ id, nodeColor: color });
   };
 
-  // ---- Income side: group sources by category, hide tiny slivers as "Other Income" ----
+  // ---- Income side: top sources → Income, hide tail as "Other Income" ----
   const incMap = new Map<string, number>();
   for (const t of income) {
     incMap.set(t.category, (incMap.get(t.category) || 0) + t.amount);
@@ -42,35 +57,44 @@ export function buildSankeyData(
     links.push({ source: 'Other Income', target: incomeNodeId, value: restIncome });
   }
 
-  // ---- Expense side: Income → Needs/Wants/Investments → Top categories per bucket ----
-  const totalExpense = expenses.reduce((s, t) => s + t.amount, 0);
-  const savings = totalIncome - totalExpense;
-
-  // By classification
-  const byClass = { Need: 0, Want: 0, Investment: 0 };
-  const catByClass: Record<'Need' | 'Want' | 'Investment', Map<string, number>> = {
+  // ---- Aggregate spending (consumption) and investments separately ----
+  let needTotal = 0;
+  let wantTotal = 0;
+  let investmentTotal = 0;
+  const catByClass: Record<'Need' | 'Want', Map<string, number>> = {
     Need: new Map(),
     Want: new Map(),
-    Investment: new Map(),
   };
   for (const t of expenses) {
-    byClass[t.classification] += t.amount;
-    const m = catByClass[t.classification];
+    if (t.classification === 'Investment') {
+      investmentTotal += t.amount;
+      continue;
+    }
+    if (t.classification === 'Need') needTotal += t.amount;
+    else wantTotal += t.amount;
+    const m = catByClass[t.classification as 'Need' | 'Want'];
     m.set(t.category, (m.get(t.category) || 0) + t.amount);
   }
 
-  const classMeta: Array<{ id: 'Need' | 'Want' | 'Investment'; label: string; color: string }> = [
-    { id: 'Need', label: 'Needs', color: CHART_COLORS.need },
-    { id: 'Want', label: 'Wants', color: CHART_COLORS.want },
-    { id: 'Investment', label: 'Investments', color: CHART_COLORS.investment },
+  const totalSpending = needTotal + wantTotal;
+  const totalSavings = totalIncome - totalSpending;
+
+  // ---- Income → Needs / Wants → top categories ----
+  const spendBuckets: Array<{
+    id: 'Need' | 'Want';
+    label: string;
+    color: string;
+    total: number;
+  }> = [
+    { id: 'Need', label: 'Needs', color: CHART_COLORS.need, total: needTotal },
+    { id: 'Want', label: 'Wants', color: CHART_COLORS.want, total: wantTotal },
   ];
 
-  for (const { id, label, color } of classMeta) {
-    if (byClass[id] <= 0) continue;
+  for (const { id, label, color, total } of spendBuckets) {
+    if (total <= 0) continue;
     addNode(label, color);
-    links.push({ source: incomeNodeId, target: label, value: byClass[id] });
+    links.push({ source: incomeNodeId, target: label, value: total });
 
-    // Top 5 categories under this classification + "Other"
     const sorted = [...catByClass[id].entries()].sort((a, b) => b[1] - a[1]);
     const top = sorted.slice(0, 5);
     const rest = sorted.slice(5).reduce((s, [, v]) => s + v, 0);
@@ -86,10 +110,42 @@ export function buildSankeyData(
     }
   }
 
-  // Savings = Income - Expense (only if positive)
-  if (savings > 0) {
-    addNode('Savings', '#10b981');
-    links.push({ source: incomeNodeId, target: 'Savings', value: savings });
+  // ---- Income → Savings → {Investments → buckets, Cash buffer} ----
+  // If totalSavings <= 0, user overspent; we just skip the savings branch.
+  // If investments exceed savings (dipped into prior savings), clip the
+  // Investments link to totalSavings and skip portfolio sub-buckets to
+  // keep the Sankey acyclic and balanced.
+  if (totalSavings > 0) {
+    const savingsNode = 'Savings';
+    addNode(savingsNode, CHART_COLORS.investment);
+    links.push({ source: incomeNodeId, target: savingsNode, value: totalSavings });
+
+    const invAmount = Math.min(investmentTotal, totalSavings);
+    const cashAmount = totalSavings - invAmount;
+
+    if (invAmount > 0) {
+      const invNode = 'Investments';
+      addNode(invNode, CHART_COLORS.investment);
+      links.push({ source: savingsNode, target: invNode, value: invAmount });
+
+      // Only sub-divide if we routed the full investment amount; otherwise
+      // proportional scaling would distort the portfolio picture.
+      if (invAmount === investmentTotal) {
+        const portfolioBuckets = portfolio?.buckets ?? [];
+        for (const b of portfolioBuckets) {
+          if (b.total <= 0) continue;
+          const nodeId = `${b.type} (Portfolio)`;
+          addNode(nodeId, CHART_COLORS.investment);
+          links.push({ source: invNode, target: nodeId, value: b.total });
+        }
+      }
+    }
+
+    if (cashAmount > 0) {
+      const cashNode = 'Cash buffer';
+      addNode(cashNode, CHART_COLORS.accent);
+      links.push({ source: savingsNode, target: cashNode, value: cashAmount });
+    }
   }
 
   return { nodes, links };

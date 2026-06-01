@@ -12,7 +12,12 @@ export function AllocationBar({ data }: AllocationBarProps) {
   const segments = [
     { key: 'Needs', ...data.need, color: CLASSIFICATION_COLORS.Need },
     { key: 'Wants', ...data.want, color: CLASSIFICATION_COLORS.Want },
-    { key: 'Investments', ...data.investment, color: CLASSIFICATION_COLORS.Investment },
+    {
+      key: 'Savings',
+      amount: data.savings.amount,
+      pct: data.savings.pct,
+      color: CLASSIFICATION_COLORS.Investment,
+    },
   ];
 
   return (
@@ -37,7 +42,7 @@ export function AllocationBar({ data }: AllocationBarProps) {
               <div>
                 <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{seg.key}</p>
                 <p className="text-xs text-gray-400 dark:text-gray-500">
-                  {formatPercent(seg.pct)} of total
+                  {formatPercent(seg.pct)} of income
                 </p>
               </div>
             </div>

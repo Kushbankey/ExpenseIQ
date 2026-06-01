@@ -19,10 +19,10 @@ export interface ExpenseTransaction extends Transaction {
 export interface SummaryStats {
   totalIncome: number;
   salaryIncome: number;
-  totalExpense: number;
-  pureExpense: number;
+  totalExpense: number; // outflow = spending + investments (kept for back-compat)
+  pureExpense: number; // alias of totalSpending
   investments: number;
-  netSavings: number;
+  netSavings: number; // = totalSavings (income - spending), investments count as saved
   savingsRate: number;
   avgMonthlyIncome: number;
   avgMonthlyExpense: number;
@@ -30,6 +30,15 @@ export interface SummaryStats {
   numMonths: number;
   numTransactions: number;
   dateRange: string;
+
+  // Correct conceptual model: Income = Spending + Investments + Cash
+  totalSpending: number; // Needs + Wants only (true consumption)
+  totalSavings: number; // Income - Spending = Investments + Cash
+  cashSavings: number; // residual cash (not consumed, not invested)
+  investmentShareOfIncome: number; // %, 0..100
+  spendingShareOfIncome: number; // %, 0..100
+  avgMonthlySpending: number;
+  avgMonthlySavings: number;
 }
 
 export interface CategoryTotal {
@@ -57,9 +66,14 @@ export interface MonthlyTrend {
 }
 
 export interface NeedsWantsResult {
+  // Percentages are share of income (not share of outflow).
   need: { amount: number; pct: number };
   want: { amount: number; pct: number };
-  investment: { amount: number; pct: number };
+  savings: {
+    amount: number; // investments + cash residual
+    pct: number;
+    breakdown: { investments: number; cash: number };
+  };
 }
 
 export interface MonthlyClassification {
