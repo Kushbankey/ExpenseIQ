@@ -57,3 +57,6 @@ sandbox-*/
 
 # Custom ignore file for Claude's internal scanning
 .claudeignore
+
+# Local planning / working docs (not for upstream)
+/planning/
