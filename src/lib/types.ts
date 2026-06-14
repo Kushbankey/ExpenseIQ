@@ -310,6 +310,72 @@ export interface CompareDelta {
   pctChange: number; // (delta / monthA) * 100; 0 if monthA is 0
 }
 
+// =========================================================================
+// User settings (persisted in Supabase, independent of Excel uploads).
+// =========================================================================
+
+export type BudgetCadence = 'monthly' | 'weekly' | 'yearly';
+
+// 'ceiling' — spending cap. Over = bad. Used for Food, Transport, Shopping…
+// 'target'  — minimum commitment. Under = bad. Used for Investment / SIPs.
+export type BudgetKind = 'ceiling' | 'target';
+
+export interface CategoryBudget {
+  id: string;
+  category: string;        // e.g. "🍜 Food" — matches Excel category exactly
+  monthlyLimit: number;    // ₹ per cadence period (cap for ceiling, target for target)
+  kind: BudgetKind;
+  cadence: BudgetCadence;
+  effectiveFrom: string;   // YYYY-MM-DD
+  effectiveTo: string | null; // null = open-ended (currently active row)
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ClassificationRule {
+  id: string;
+  pattern: string;         // normalised substring of Note
+  category: string;
+  subcategory: string | null;
+  confidence: number;      // 0..1
+  appliedCount: number;
+  createdAt: string;
+}
+
+// Derived per-category status for the budget UI. Computed by
+// lib/analytics/categoryBudget.ts from (expenses + budgets + as-of date).
+//
+// Ceiling kinds use: on-pace | watch | over | no-budget.
+// Target  kinds use: achieved | on-track | behind | missed | no-budget.
+export type BudgetStatus =
+  | 'on-pace' | 'watch' | 'over'              // ceiling
+  | 'achieved' | 'on-track' | 'behind' | 'missed' // target
+  | 'no-budget';
+
+export interface CategoryBudgetStatus {
+  category: string;
+  // Effective kind for display. Honours the persisted row when present,
+  // otherwise suggests 'target' for Investment-classified categories and
+  // 'ceiling' for everything else. UI uses this to drive labels + colours.
+  kind: BudgetKind;
+  monthlyLimit: number | null; // null = no budget set yet
+  spent: number;               // this-month-to-date (or "invested" for target)
+  remaining: number;           // limit - spent (negative when over; for target, ₹ still needed when positive)
+  pctUsed: number;             // 0..∞ (spent / limit * 100); 0 if no budget
+  daysElapsed: number;
+  daysInMonth: number;
+  projectedEndOfMonth: number; // spent / daysElapsed * daysInMonth
+  paceAllowedToday: number;    // limit * daysElapsed / daysInMonth
+  dailyPaceRemaining: number;  // (limit - spent) / daysRemaining
+  status: BudgetStatus;
+  lastMonthSpent: number;      // for the report-card row
+  lastMonthLimit: number | null;
+  // Historical anchors — used as hints when setting / reviewing a budget.
+  trailing3Avg: number;        // avg of the 3 completed months before current; 0 if no prior data
+  trailing3MonthCount: number; // how many completed months actually contributed (1–3)
+  lifetimeMonthlyAvg: number;  // avg over all completed months
+}
+
 export interface FinanceData {
   expenses: ExpenseTransaction[];
   income: Transaction[];
