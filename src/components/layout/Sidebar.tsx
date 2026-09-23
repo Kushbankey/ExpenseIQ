@@ -16,6 +16,7 @@ import {
   Lightbulb,
   CalendarDays,
   Store,
+  CreditCard,
   Settings,
   IndianRupee,
   LogOut,
@@ -33,11 +34,13 @@ const iconMap: Record<string, React.ComponentType<{ size?: number; className?: s
   Lightbulb,
   CalendarDays,
   Store,
+  CreditCard,
   Settings,
 };
 
 const NAV_ITEMS = [
   { label: 'Overview', href: '/dashboard', icon: 'LayoutDashboard' },
+  { label: 'Cards', href: '/dashboard/cards', icon: 'CreditCard' },
   { label: 'Transactions', href: '/dashboard/transactions', icon: 'ArrowLeftRight' },
   { label: 'Categories', href: '/dashboard/categories', icon: 'PieChart' },
   { label: 'Accounts', href: '/dashboard/accounts', icon: 'Wallet' },
@@ -51,8 +54,8 @@ const NAV_ITEMS = [
 
 const BOTTOM_NAV_ITEMS = [
   { label: 'Overview', href: '/dashboard', icon: 'LayoutDashboard' },
+  { label: 'Cards', href: '/dashboard/cards', icon: 'CreditCard' },
   { label: 'Txns', href: '/dashboard/transactions', icon: 'ArrowLeftRight' },
-  { label: 'Categories', href: '/dashboard/categories', icon: 'PieChart' },
   { label: 'Trends', href: '/dashboard/trends', icon: 'TrendingUp' },
   { label: 'More', href: '#more', icon: 'Menu' },
 ];
