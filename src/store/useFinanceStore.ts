@@ -19,6 +19,8 @@ import { detectAnomalies } from '@/lib/analytics/anomalies';
 import { createClient } from '@/lib/supabase/client';
 import { serializeFinanceData, deserializeFinanceData } from '@/lib/serialization';
 
+export type SaveState = 'idle' | 'saving' | 'saved' | 'failed';
+
 interface FinanceStore {
   data: FinanceData | null;
   isLoaded: boolean;
@@ -26,6 +28,12 @@ interface FinanceStore {
   isRestoring: boolean;
   error: string | null;
   fileName: string | null;
+  // Persistence is fire-and-forget so the UI stays responsive after a parse.
+  // These surface the outcome: without them a failed save looks exactly like a
+  // successful one and the upload is silently lost on next login.
+  saveState: SaveState;
+  saveError: string | null;
+  savedAt: string | null;
   processFile: (file: File) => Promise<void>;
   saveToSupabase: (file?: File) => Promise<void>;
   restoreFromSupabase: () => Promise<boolean>;
@@ -39,6 +47,9 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
   isRestoring: false,
   error: null,
   fileName: null,
+  saveState: 'idle',
+  saveError: null,
+  savedAt: null,
 
   processFile: async (file: File) => {
     set({ isProcessing: true, error: null });
@@ -105,14 +116,20 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
     const { data, fileName } = get();
     if (!data) return;
 
+    set({ saveState: 'saving', saveError: null });
+
     try {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        set({ saveState: 'failed', saveError: 'Not signed in, so nothing was saved.' });
+        return;
+      }
 
-      // Save processed data as JSONB
+      // Save processed data as JSONB. The row is the source of truth on next
+      // login, so a failure here must not pass silently.
       const serialized = serializeFinanceData(data);
-      await supabase
+      const { error: rowErr } = await supabase
         .from('user_data')
         .upsert({
           user_id: user.id,
@@ -121,14 +138,30 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
           uploaded_at: new Date().toISOString(),
         }, { onConflict: 'user_id' });
 
-      // Upload Excel file to Storage
+      if (rowErr) throw rowErr;
+
+      // Upload Excel file to Storage. Secondary: the parsed row above is what
+      // the app reads back, so a storage failure is reported but not fatal.
       if (file) {
-        await supabase.storage
+        const { error: fileErr } = await supabase.storage
           .from('excel-files')
           .upload(`${user.id}/${file.name}`, file, { upsert: true });
+        if (fileErr) {
+          set({
+            saveState: 'saved',
+            savedAt: new Date().toISOString(),
+            saveError: `Data saved, but the original file could not be archived: ${fileErr.message}`,
+          });
+          return;
+        }
       }
+
+      set({ saveState: 'saved', savedAt: new Date().toISOString(), saveError: null });
     } catch (err) {
-      console.error('Failed to save to Supabase:', err);
+      set({
+        saveState: 'failed',
+        saveError: err instanceof Error ? err.message : 'Could not save to the server.',
+      });
     }
   },
 
@@ -168,5 +201,6 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
     }
   },
 
-  reset: () => set({ data: null, isLoaded: false, isRestoring: false, error: null, fileName: null }),
+  reset: () => set({ data: null, isLoaded: false, isRestoring: false, error: null, fileName: null,
+    saveState: 'idle', saveError: null, savedAt: null }),
 }));

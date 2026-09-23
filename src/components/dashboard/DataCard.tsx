@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { FileSpreadsheet, Upload, X, CheckCircle2 } from 'lucide-react';
+import { FileSpreadsheet, Upload, X, CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { DropZone } from '@/components/upload/DropZone';
 import { createClient } from '@/lib/supabase/client';
@@ -15,6 +15,8 @@ interface Metadata {
 
 export function DataCard() {
   const storeFileName = useFinanceStore((s) => s.fileName);
+  const saveState = useFinanceStore((s) => s.saveState);
+  const saveError = useFinanceStore((s) => s.saveError);
   const [meta, setMeta] = useState<Metadata>({ fileName: null, uploadedAt: null });
   const [modalOpen, setModalOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -74,10 +76,37 @@ export function DataCard() {
           </button>
         </div>
 
-        {showSuccess && (
+        {/* Persistence runs in the background after a parse. Report what actually
+            happened: a failed save previously looked identical to a successful one,
+            and the upload was lost on next login. */}
+        {saveState === 'saving' && (
+          <div className="mt-4 flex items-center gap-2 px-3 py-2 bg-gray-50 text-gray-600 dark:bg-gray-800/60 dark:text-gray-300 text-sm rounded-lg">
+            <Loader2 size={16} className="animate-spin" />
+            Saving to your account...
+          </div>
+        )}
+
+        {saveState === 'failed' && (
+          <div className="mt-4 flex items-start gap-2 px-3 py-2 bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300 text-sm rounded-lg">
+            <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
+            <span>
+              <strong className="font-semibold">Not saved.</strong> Your analytics are live in this
+              tab but will be lost when you sign out. {saveError}
+            </span>
+          </div>
+        )}
+
+        {saveState === 'saved' && saveError && (
+          <div className="mt-4 flex items-start gap-2 px-3 py-2 bg-amber-50 text-amber-800 dark:bg-amber-500/10 dark:text-amber-300 text-sm rounded-lg">
+            <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
+            <span>{saveError}</span>
+          </div>
+        )}
+
+        {showSuccess && saveState !== 'failed' && (
           <div className="mt-4 flex items-center gap-2 px-3 py-2 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300 text-sm rounded-lg">
             <CheckCircle2 size={16} />
-            Data updated. New analytics are live across all pages.
+            Data updated and saved. New analytics are live across all pages.
           </div>
         )}
       </Card>
