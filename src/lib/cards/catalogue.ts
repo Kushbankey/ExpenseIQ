@@ -261,6 +261,74 @@ export const FULL_DEPTH_CARDS: CardTerms[] = [
     validFrom: '2026-04-21',
     sourceUrl: 'https://cardinsider.com/hdfc-bank/swiggy-hdfc-bank-credit-card/',
     verifiedOn: VERIFIED,
+    notes: [
+      'Being phased out. HDFC split this product into Swiggy Ornge and Swiggy BLCK in 2026.',
+      'Existing holders are migrated; new applicants get Ornge, which pays 5% on Swiggy, not 10%.',
+    ],
+  },
+
+  {
+    // Terms read from HDFC's own T&C document published 07-Apr-2026, not from reviews.
+    // The capping column in its Table 1.1 spans every 5% row, so Swiggy and online
+    // share ONE Rs 1,500 monthly pool. That is the difference from Swiggy BLCK, which
+    // gives each its own pool, and it is what limits this card's value.
+    id: 'hdfc-swiggy-ornge',
+    issuer: 'HDFC Bank',
+    name: 'Swiggy Ornge',
+    network: 'mastercard',
+    rails: ['card'],
+    depth: 'full',
+    joiningFee: 500,
+    annualFee: 500,
+    feeWaiverSpend: 150000,
+    rewardUnit: 'cashback',
+    // Verified from the worked example in the T&C: a Rs 1,000 Swiggy spend posts Rs 50.
+    // Cashback auto-redeems against the outstanding balance, so one unit is one rupee.
+    rewardValue: 1,
+    earn: [
+      {
+        buckets: ['food_delivery', 'quick_commerce'],
+        merchants: ['swiggy', 'instamart', 'dineout'],
+        rate: 0.05,
+        cap: { basis: 'fixed', units: 1500, period: 'month' },
+        capPool: 'ornge-5pc',
+        minTxn: 249,
+        note: 'Swiggy food, Instamart and Dineout. Excludes Swiggy Money wallet and liquor.',
+      },
+      {
+        // Table 2.1, online merchants only: apparel, pharmacy, pet, personal care,
+        // Ola/Uber, Croma/Reliance/Vijay Sales, OTAs, Amazon, Flipkart, Nykaa, Ajio,
+        // Netflix, Hotstar, BookMyShow, Meesho. Offline venues do not qualify.
+        buckets: ['online_shopping', 'cabs', 'travel_flight', 'travel_hotel', 'health'],
+        rate: 0.05,
+        cap: { basis: 'fixed', units: 1500, period: 'month' },
+        capPool: 'ornge-5pc',
+        minTxn: 249,
+        note: 'Shares the same Rs 1,500 monthly pool as Swiggy spends',
+      },
+      {
+        allOther: true,
+        rate: 0.01,
+        cap: { basis: 'fixed', units: 1000, period: 'month' },
+        minTxn: 100,
+      },
+    ],
+    excludedBuckets: [
+      'fuel', 'rent', 'government', 'education', 'insurance',
+      'transfer', 'investment',
+    ],
+    milestones: [],
+    validFrom: '2026-04-07',
+    sourceUrl:
+      'https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/discover-products/cards/credit-cards/swiggy-ornge-hdfc-bank-credit-card/pdf/swiggy-orange.pdf',
+    verifiedOn: '2026-09-25',
+    notes: [
+      'Replaces the original Swiggy HDFC card. Swiggy drops from 10% to 5%.',
+      'The Rs 1,500 monthly cap is SHARED across Swiggy and all 5% online categories.',
+      'Minimum Rs 249 per transaction for 5%, Rs 100 for 1%. No lounge access.',
+      'Also excluded: gift cards, wallets, jewellery, gaming, Smartpay, SmartBuy portal, all EMI.',
+      'Welcome benefit is 12 months of Swiggy One on activation.',
+    ],
   },
 
   {
