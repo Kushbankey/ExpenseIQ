@@ -41,6 +41,7 @@ import {
 } from '@/lib/cards/catalogue';
 import {
   activeCards,
+  addOnFee,
   baseAnnualFee,
   buildAccountIndex,
   type UserCard,
@@ -273,7 +274,8 @@ function finalise(
 
     const base = baseAnnualFee(holder, terms);
     const waived = base > 0 && terms.feeWaiverSpend != null && r.spend >= terms.feeWaiverSpend;
-    r.fee = waived ? 0 : base;
+    // A spend waiver applies to the card fee only. A paid membership is charged regardless.
+    r.fee = (waived ? 0 : base) + addOnFee(holder, terms);
     r.feeWaived = waived;
     r.net = r.rewardRupees - r.fee;
 

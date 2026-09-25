@@ -44,13 +44,25 @@ export function activeCards(wallet: readonly UserCard[]): UserCard[] {
 }
 
 /**
- * What this holder actually pays, before any spend-based waiver.
+ * The card's own annual fee, before any spend-based waiver.
  * Lifetime-free beats everything, then an explicit override, then the list price.
  */
 export function baseAnnualFee(card: UserCard, terms: CardTerms): number {
   if (card.isLifetimeFree) return 0;
   if (card.annualFeeOverride != null) return card.annualFeeOverride;
   return terms.annualFee;
+}
+
+/**
+ * Paid add-ons the holder has switched on, e.g. Kiwi Neon at Rs 999.
+ *
+ * Separate from the card fee for two reasons: a lifetime-free card can still carry a
+ * paid add-on, and a spend-based waiver waives the card fee, never the membership.
+ */
+export function addOnFee(card: UserCard, terms: CardTerms): number {
+  return (terms.addOnFees ?? [])
+    .filter((a) => card.params[a.param] === true)
+    .reduce((sum, a) => sum + a.fee, 0);
 }
 
 /** Ledger account label to catalogue id, for pricing what was actually earned. */

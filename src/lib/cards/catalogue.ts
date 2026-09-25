@@ -73,6 +73,19 @@ export interface EarnRule {
   note?: string;
 }
 
+/**
+ * A paid add-on that unlocks better earn rates, e.g. Kiwi Neon.
+ *
+ * Kept separate from `annualFee` because the card itself can be lifetime free while the
+ * add-on is not, and because a spend-based fee waiver does not waive an add-on.
+ */
+export interface AddOnFee {
+  /** Key in `UserCard.params` that switches this add-on on. */
+  param: string;
+  fee: number;
+  label: string;
+}
+
 export interface LoungeBenefit {
   domestic?: number;
   international?: number;
@@ -105,6 +118,8 @@ export interface CardTerms {
   excludedBuckets: SpendBucket[];
 
   lounge?: LoungeBenefit;
+  /** Optional paid memberships that change the earn rules. Never waived by spend. */
+  addOnFees?: AddOnFee[];
   milestones?: { spend: number; period: CapPeriod; reward: string }[];
 
   /** One line for outline cards, shown instead of computed value. */
@@ -326,8 +341,15 @@ export const FULL_DEPTH_CARDS: CardTerms[] = [
     depth: 'full',
     joiningFee: 0,
     annualFee: 0,
-    rewardUnit: 'cashback',
-    rewardValue: 1,
+    // Kiwi advertises "1.5% cashback", but the percentage is a COUNT of Kiwis per
+    // Rs 100, not rupees. Each Kiwi is worth Rs 0.25 (gokiwi.in rewards policy), so
+    // the headline 1.5% is 0.375% in money and Neon's best tier of 5% is 1.25%.
+    // Cross-checks: 500 Kiwis = Rs 125 minimum redemption, and roughly Rs 33,500 of
+    // spend reaches 500 Kiwis at the base rate, which only works if 1.5 Kiwis accrue
+    // per Rs 100. Rates below are therefore Kiwis per rupee, valued at 0.25.
+    rewardUnit: 'points',
+    rewardValue: 0.25,
+    addOnFees: [{ param: 'neonSubscribed', fee: 999, label: 'Kiwi Neon membership' }],
     earn: [
       {
         buckets: ['dining', 'offline_retail', 'cabs', 'entertainment', 'groceries', 'health'],
@@ -343,7 +365,7 @@ export const FULL_DEPTH_CARDS: CardTerms[] = [
         requiresParam: 'neonSubscribed',
         minTxn: 100,
         roundDownTo: 100,
-        note: 'Kiwi Neon, Rs 999 a year. Tiers step with cumulative annual UPI spend.',
+        note: 'Kiwi Neon, Rs 999 a year. 2 Kiwis per Rs 100 (0.5%), rising to 5 (1.25%) past Rs 1.5L cumulative.',
       },
       {
         buckets: ['dining', 'offline_retail', 'cabs', 'entertainment', 'groceries', 'health'],
@@ -352,7 +374,7 @@ export const FULL_DEPTH_CARDS: CardTerms[] = [
         capPool: 'kiwi',
         minTxn: 100,
         roundDownTo: 100,
-        note: 'Base Scan and Pay rate without Neon',
+        note: 'Base Scan and Pay without Neon: 1.5 Kiwis per Rs 100, so 0.375% in money',
       },
       {
         allOther: true,
@@ -373,7 +395,8 @@ export const FULL_DEPTH_CARDS: CardTerms[] = [
     notes: [
       'Issued by Yes Bank, PNB or AU Small Finance. Older cards sit on Axis.',
       'Runs on UPI, so it reaches QR merchants that accept no plastic.',
-      'Cashback caps at 1% of credit limit per month. Set credit_limit on the wallet row.',
+      'Caps at 1% of credit limit per month, counted in Kiwis, so a Rs 2L limit caps value at Rs 500 a month.',
+      'Neon costs Rs 999 and tops out at 1.25% in money, below a plain 1.5% cashback card.',
       'Rewards accrue only in multiples of Rs 100. Person to person UPI does not earn.',
     ],
   },
@@ -493,9 +516,11 @@ export const FULL_DEPTH_CARDS: CardTerms[] = [
     joiningFee: 5000,
     annualFee: 5000,
     rewardUnit: 'miles',
-    rewardValue: 0.2,
-    rewardValueBest: 1.0,
-    rewardValueBestLabel: 'Airline and hotel transfer partners',
+    // 1 EDGE Mile = Rs 1 on the Travel EDGE portal and against the card bill, so Rs 1
+    // is the floor, not the ceiling. Transfers to most partners run 1:2, worth ~Rs 2.
+    rewardValue: 1.0,
+    rewardValueBest: 2.0,
+    rewardValueBestLabel: 'Transfer to airline and hotel partners at 1:2',
     earn: [
       {
         buckets: ['travel_flight', 'travel_hotel'],
@@ -522,10 +547,12 @@ export const FULL_DEPTH_CARDS: CardTerms[] = [
     joiningFee: 5000,
     annualFee: 5000,
     rewardUnit: 'points',
+    // 1 MR point per Rs 50 spent = 0.02 points per rupee. Cash-equivalent value is the
+    // catalogue rate of about Rs 0.25; transfers reach far more but are not the basis here.
     rewardValue: 0.25,
-    rewardValueBest: 0.5,
-    rewardValueBestLabel: 'Travel vouchers at milestone thresholds',
-    earn: [{ allOther: true, rate: 0.01 }],
+    rewardValueBest: 1.5,
+    rewardValueBestLabel: 'Airline transfer partners',
+    earn: [{ allOther: true, rate: 0.02 }],
     excludedBuckets: ['fuel', 'rent', 'insurance', 'transfer', 'investment', 'government'],
     lounge: { domestic: 2, period: 'quarter', spendTrigger: 100000 },
     milestones: [
